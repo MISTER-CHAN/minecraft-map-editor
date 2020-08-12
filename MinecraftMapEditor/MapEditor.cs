@@ -16,13 +16,13 @@ namespace MinecraftMapEditor
     {
         bool isPainting = false;
         Brush brush = new SolidBrush(Color.White);
-        byte resolution = 1, selColor = 0;
+        byte resolution = 1, selColor = 0, selColorLeft = 0, selColorRight = 0;
         byte[,] colors = new byte[0x80, 0x80];
         Graphics graphics;
         float size;
         int brushSize = 1;
         Pen pen = new Pen(Color.Black);
-        Color[] colorTable = new Color[208]
+        Color[] colorTable = new Color[0x100]
         {
             Color.FromArgb(255, 255, 255),
             Color.FromArgb(255, 255, 255),
@@ -231,7 +231,55 @@ namespace MinecraftMapEditor
             Color.FromArgb(26, 15, 11),
             Color.FromArgb(31, 18, 13),
             Color.FromArgb(37, 22, 16),
-            Color.FromArgb(19, 11, 8)
+            Color.FromArgb(19, 11, 8),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255)
         };
 
         private void BrushSize_Click(object sender, EventArgs e)
@@ -248,7 +296,7 @@ namespace MinecraftMapEditor
             {
                 for (byte x = 0; x < 0x80; x++)
                 {
-                    s += colors[x,y];
+                    s += colors[x, y] < 0x80 ? colors[x, y] : colors[x, y] - 0x100;
                     if ((x + 1) % 0x10 > 0)
                         s += "  ";
                     else
@@ -261,6 +309,22 @@ namespace MinecraftMapEditor
 
         private void Canvas_MouseDown(object sender, MouseEventArgs e)
         {
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    selColor = selColorLeft;
+                    rbColorLeft.Checked = true;
+                    break;
+                case MouseButtons.Right:
+                    selColor = selColorRight;
+                    rbColorRight.Checked = true;
+                    break;
+                default:
+                    return;
+            }
+            if (brush != null)
+                brush.Dispose();
+            brush = new SolidBrush(colorTable[selColor]);
             if (mnuBucket.Checked)
             {
                 byte c = colors[(byte)((float)e.X / picCanvas.ClientRectangle.Width * 0x80),
@@ -322,11 +386,16 @@ namespace MinecraftMapEditor
         {
             if (lvColorPicker.SelectedItems.Count > 0)
             {
-                if (brush != null)
-                    brush.Dispose();
-                selColor = (byte)lvColorPicker.SelectedItems[0].Index;
-                brush = new SolidBrush(lvColorPicker.SelectedItems[0].BackColor);
-                lblColorViewer.BackColor = lvColorPicker.SelectedItems[0].BackColor;
+                if (rbColorLeft.Checked)
+                {
+                    selColorLeft = (byte)lvColorPicker.SelectedItems[0].Index;
+                    rbColorLeft.BackColor = lvColorPicker.SelectedItems[0].BackColor;
+                }
+                else if (rbColorRight.Checked)
+                {
+                    selColorRight = (byte)lvColorPicker.SelectedItems[0].Index;
+                    rbColorRight.BackColor = lvColorPicker.SelectedItems[0].BackColor;
+                }
             }
         }
 
@@ -338,11 +407,11 @@ namespace MinecraftMapEditor
         public MapEditor()
         {
             InitializeComponent();
-            for (byte b = 0; b < colorTable.Length; b++)
+            for (int i = 0; i < colorTable.Length; i++)
             {
-                ListViewItem lvi = new ListViewItem(b + "")
+                ListViewItem lvi = new ListViewItem(i + "")
                 {
-                    BackColor = colorTable[b]
+                    BackColor = colorTable[i]
                 };
                 lvColorPicker.Items.Add(lvi);
             }
@@ -356,7 +425,7 @@ namespace MinecraftMapEditor
             if (s != "")
             {
                 s = Clipboard.GetText();
-                byte[][] colors = Regex.Matches(s + "\r\n", "((\\d+  ){15}\\d+\\r\\n){8}").Cast<Match>().Select(m1 => Regex.Matches(m1.Value, "\\b\\d+?\\b").Cast<Match>().Select(m2 => byte.Parse(m2.Value)).ToArray()).ToArray();
+                byte[][] colors = Regex.Matches(s + "\r\n", "(([0-9-]+  ){15}[0-9-]+\\r\\n){8}").Cast<Match>().Select(m1 => Regex.Matches(m1.Value, "[0-9-]+").Cast<Match>().Select(m2 => m2.Value[0] == '-' ? (byte)(0x100 + short.Parse(m2.Value)) : byte.Parse(m2.Value)).ToArray()).ToArray();
                 for (byte y = 0; y < 0x80; y++)
                     for (byte x = 0; x < 0x80; x++)
                         this.colors[x, y] = colors[y][x];
@@ -401,9 +470,9 @@ namespace MinecraftMapEditor
         void ResizeCanvas()
         {
             picCanvas.Top = menuStrip.Height;
-            lblColorViewer.Top = ClientRectangle.Height - lblColorViewer.Height;
-            lvColorPicker.Location = new Point(lblColorViewer.Width, lblColorViewer.Top);
-            lvColorPicker.Width = ClientRectangle.Width - lblColorViewer.Width;
+            pnlColorViewer.Top = ClientRectangle.Height - pnlColorViewer.Height;
+            lvColorPicker.Location = new Point(pnlColorViewer.Width, pnlColorViewer.Top);
+            lvColorPicker.Width = ClientRectangle.Width - pnlColorViewer.Width;
             if (ClientRectangle.Width >= lvColorPicker.Top - menuStrip.Height)
             {
                 picCanvas.Size = new Size(lvColorPicker.Top - menuStrip.Height, lvColorPicker.Top - menuStrip.Height);
