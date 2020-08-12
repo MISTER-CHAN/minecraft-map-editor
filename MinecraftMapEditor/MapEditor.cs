@@ -16,7 +16,7 @@ namespace MinecraftMapEditor
     {
         bool isPainting = false;
         Brush brush = new SolidBrush(Color.White);
-        byte resolution = 1, selColor = 0, selColorLeft = 0, selColorRight = 0;
+        byte cellSize = 0, resolution = 1, selColor = 0, selColorLeft = 0, selColorRight = 0;
         byte[,] colors = new byte[0x80, 0x80];
         Graphics graphics;
         float size;
@@ -325,7 +325,7 @@ namespace MinecraftMapEditor
             if (brush != null)
                 brush.Dispose();
             brush = new SolidBrush(colorTable[selColor]);
-            if (mnuBucket.Checked)
+            if (miBucket.Checked)
             {
                 byte c = colors[(byte)((float)e.X / picCanvas.ClientRectangle.Width * 0x80),
                     (byte)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80)];
@@ -348,28 +348,31 @@ namespace MinecraftMapEditor
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isPainting && !mnuBucket.Checked)
+            int x = (int)((float)e.X / picCanvas.ClientRectangle.Width * 0x80),
+                y = (int)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80);
+            lblPos.Text = $"({x - 0x40}, {y - 0x40})";
+            if (isPainting && !miBucket.Checked)
             {
                 if (0 <= e.X && e.X < picCanvas.ClientRectangle.Width && 0 <= e.Y && e.Y < picCanvas.ClientRectangle.Height)
                 {
-                    if (mnuBrush.Checked)
+                    if (miBrush.Checked)
                     {
-                        byte left = (byte)((byte)((float)e.X / picCanvas.ClientRectangle.Width * 0x80 / resolution - brushSize / 2) * resolution),
-                            top = (byte)((byte)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80 / resolution - brushSize / 2) * resolution);
-                        for (byte y = top; y < top + brushSize * resolution; y++)
+                        byte left = (byte)((byte)(x / resolution - brushSize / 2) * resolution),
+                            top = (byte)((byte)(y / resolution - brushSize / 2) * resolution);
+                        for (byte by = top; by < top + brushSize * resolution; by++)
                         {
-                            if (y >= 0x80)
+                            if (by >= 0x80)
                                 break;
-                            for (byte x = left; x < left + brushSize * resolution; x++)
+                            for (byte bx = left; bx < left + brushSize * resolution; bx++)
                             {
-                                if (x >= 0x80)
+                                if (bx >= 0x80)
                                     break;
-                                colors[x, y] = selColor;
+                                colors[bx, by] = selColor;
                             }
                         }
                         graphics.FillRectangle(brush, new RectangleF(left * size, top * size, brushSize * size * resolution, brushSize * size * resolution));
                     }
-                    else if (mnuEyedropper.Checked)
+                    else if (miEyedropper.Checked)
                     {
                         lvColorPicker.Items[colors[(byte)((float)e.X / picCanvas.ClientRectangle.Width * 0x80), (byte)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80)]].Selected = true;
                     }
@@ -380,6 +383,16 @@ namespace MinecraftMapEditor
         private void Canvas_MouseUp(object sender, MouseEventArgs e)
         {
             isPainting = false;
+        }
+
+        private void CellGrid_Click(object sender, EventArgs e)
+        {
+            string s = Interaction.InputBox("Cell size", "Cell grid", cellSize + "");
+            if (s != "")
+            {
+                cellSize = byte.Parse(s);
+                RedrawCellGrid();
+            }
         }
 
         private void ColorPicker_SelectedIndexChanged(object sender, EventArgs e)
@@ -433,6 +446,24 @@ namespace MinecraftMapEditor
             }
         }
 
+        void RedrawCellGrid()
+        {
+            if (cellSize > 0)
+            {
+                pen.Color = Color.Red;
+                for (int i = 0; i < 0x80; i += cellSize * resolution)
+                {
+                    graphics.DrawLine(pen, new PointF(size * i, 0), new PointF(size * i, picCanvas.ClientRectangle.Height));
+                    graphics.DrawLine(pen, new PointF(0, size * i), new PointF(picCanvas.ClientRectangle.Width, size * i));
+                }
+            }
+        }
+
+        private void RedrawCellGrid_Click(object sender, EventArgs e)
+        {
+            RedrawCellGrid();
+        }
+
         private void RedrawChunkGrid_Click(object sender, EventArgs e)
         {
             pen.Color = Color.Black;
@@ -470,7 +501,7 @@ namespace MinecraftMapEditor
         void ResizeCanvas()
         {
             picCanvas.Top = menuStrip.Height;
-            pnlColorViewer.Top = ClientRectangle.Height - pnlColorViewer.Height;
+            pnlColorViewer.Top = ClientRectangle.Height - statusStrip.Height - pnlColorViewer.Height;
             lvColorPicker.Location = new Point(pnlColorViewer.Width, pnlColorViewer.Top);
             lvColorPicker.Width = ClientRectangle.Width - pnlColorViewer.Width;
             if (ClientRectangle.Width >= lvColorPicker.Top - menuStrip.Height)
@@ -496,18 +527,18 @@ namespace MinecraftMapEditor
 
         private void Resolution_Click(object sender, EventArgs e)
         {
-            string s = Interaction.InputBox("Resolution (1 ~ 128)", "Map Editor", 0x80 / resolution + "");
-            if (s != "")
-            {
-                resolution = (byte)(0x80 / int.Parse(s));
-            }
+            foreach (ToolStripMenuItem mi in miResolution.DropDownItems)
+                mi.Checked = false;
+            ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
+            resolution = byte.Parse(menuItem.Tag + "");
+            menuItem.Checked = true;
         }
 
         private void Tool_Click(object sender, EventArgs e)
         {
-            mnuBrush.Checked = false;
-            mnuBucket.Checked = false;
-            mnuEyedropper.Checked = false;
+            miBrush.Checked = false;
+            miBucket.Checked = false;
+            miEyedropper.Checked = false;
             ((ToolStripMenuItem)sender).Checked = true;
         }
     }

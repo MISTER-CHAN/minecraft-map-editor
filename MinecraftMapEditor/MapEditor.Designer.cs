@@ -32,26 +32,39 @@
             this.picCanvas = new System.Windows.Forms.PictureBox();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBuild = new System.Windows.Forms.ToolStripMenuItem();
+            this.miNew = new System.Windows.Forms.ToolStripMenuItem();
+            this.miOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.miBuild = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBrush = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBrushSize = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBucket = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEyedropper = new System.Windows.Forms.ToolStripMenuItem();
+            this.miBrush = new System.Windows.Forms.ToolStripMenuItem();
+            this.miBrushSize = new System.Windows.Forms.ToolStripMenuItem();
+            this.miBucket = new System.Windows.Forms.ToolStripMenuItem();
+            this.miEyedropper = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuRedraw = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuRedrawMap = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuRedrawGrid = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuRedrawChunkGrid = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuCellGrid = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuResolution = new System.Windows.Forms.ToolStripMenuItem();
+            this.miRedraw = new System.Windows.Forms.ToolStripMenuItem();
+            this.miRedrawMap = new System.Windows.Forms.ToolStripMenuItem();
+            this.miRedrawGrid = new System.Windows.Forms.ToolStripMenuItem();
+            this.miRedrawChunkGrid = new System.Windows.Forms.ToolStripMenuItem();
+            this.miCellGrid = new System.Windows.Forms.ToolStripMenuItem();
+            this.miResolution = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuResolution1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miResolution2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miResolution4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miResolution8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miResolution16 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miResolution32 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miResolution64 = new System.Windows.Forms.ToolStripMenuItem();
+            this.miResolution128 = new System.Windows.Forms.ToolStripMenuItem();
             this.rbColorLeft = new System.Windows.Forms.RadioButton();
             this.pnlColorViewer = new System.Windows.Forms.Panel();
             this.rbColorRight = new System.Windows.Forms.RadioButton();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.lblPos = new System.Windows.Forms.ToolStripStatusLabel();
+            this.miRedrawCellGrid = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.picCanvas)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.pnlColorViewer.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // lvColorPicker
@@ -93,121 +106,204 @@
             // mnuFile
             // 
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuOpen,
-            this.mnuBuild});
+            this.miNew,
+            this.miOpen,
+            this.miBuild});
             this.mnuFile.Name = "mnuFile";
             this.mnuFile.Size = new System.Drawing.Size(39, 21);
             this.mnuFile.Text = "File";
             // 
-            // mnuOpen
+            // miNew
             // 
-            this.mnuOpen.Name = "mnuOpen";
-            this.mnuOpen.Size = new System.Drawing.Size(108, 22);
-            this.mnuOpen.Text = "Open";
-            this.mnuOpen.Click += new System.EventHandler(this.Open_Click);
+            this.miNew.Name = "miNew";
+            this.miNew.Size = new System.Drawing.Size(108, 22);
+            this.miNew.Text = "New";
             // 
-            // mnuBuild
+            // miOpen
             // 
-            this.mnuBuild.Name = "mnuBuild";
-            this.mnuBuild.Size = new System.Drawing.Size(108, 22);
-            this.mnuBuild.Text = "Build";
-            this.mnuBuild.Click += new System.EventHandler(this.Build_Click);
+            this.miOpen.Name = "miOpen";
+            this.miOpen.Size = new System.Drawing.Size(108, 22);
+            this.miOpen.Text = "Open";
+            this.miOpen.Click += new System.EventHandler(this.Open_Click);
+            // 
+            // miBuild
+            // 
+            this.miBuild.Name = "miBuild";
+            this.miBuild.Size = new System.Drawing.Size(108, 22);
+            this.miBuild.Text = "Build";
+            this.miBuild.Click += new System.EventHandler(this.Build_Click);
             // 
             // mnuEdit
             // 
             this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuBrush,
-            this.mnuBucket,
-            this.mnuEyedropper});
+            this.miBrush,
+            this.miBucket,
+            this.miEyedropper});
             this.mnuEdit.Name = "mnuEdit";
             this.mnuEdit.Size = new System.Drawing.Size(42, 21);
             this.mnuEdit.Text = "Edit";
             // 
-            // mnuBrush
+            // miBrush
             // 
-            this.mnuBrush.Checked = true;
-            this.mnuBrush.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mnuBrush.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuBrushSize});
-            this.mnuBrush.Name = "mnuBrush";
-            this.mnuBrush.Size = new System.Drawing.Size(145, 22);
-            this.mnuBrush.Text = "Brush";
-            this.mnuBrush.Click += new System.EventHandler(this.Tool_Click);
+            this.miBrush.Checked = true;
+            this.miBrush.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.miBrush.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miBrushSize});
+            this.miBrush.Name = "miBrush";
+            this.miBrush.Size = new System.Drawing.Size(145, 22);
+            this.miBrush.Text = "Brush";
+            this.miBrush.Click += new System.EventHandler(this.Tool_Click);
             // 
-            // mnuBrushSize
+            // miBrushSize
             // 
-            this.mnuBrushSize.Name = "mnuBrushSize";
-            this.mnuBrushSize.Size = new System.Drawing.Size(99, 22);
-            this.mnuBrushSize.Text = "Size";
-            this.mnuBrushSize.Click += new System.EventHandler(this.BrushSize_Click);
+            this.miBrushSize.Name = "miBrushSize";
+            this.miBrushSize.Size = new System.Drawing.Size(99, 22);
+            this.miBrushSize.Text = "Size";
+            this.miBrushSize.Click += new System.EventHandler(this.BrushSize_Click);
             // 
-            // mnuBucket
+            // miBucket
             // 
-            this.mnuBucket.Name = "mnuBucket";
-            this.mnuBucket.Size = new System.Drawing.Size(145, 22);
-            this.mnuBucket.Text = "Bucket";
-            this.mnuBucket.Click += new System.EventHandler(this.Tool_Click);
+            this.miBucket.Name = "miBucket";
+            this.miBucket.Size = new System.Drawing.Size(145, 22);
+            this.miBucket.Text = "Bucket";
+            this.miBucket.Click += new System.EventHandler(this.Tool_Click);
             // 
-            // mnuEyedropper
+            // miEyedropper
             // 
-            this.mnuEyedropper.Name = "mnuEyedropper";
-            this.mnuEyedropper.Size = new System.Drawing.Size(145, 22);
-            this.mnuEyedropper.Text = "Eyedropper";
-            this.mnuEyedropper.Click += new System.EventHandler(this.Tool_Click);
+            this.miEyedropper.Name = "miEyedropper";
+            this.miEyedropper.Size = new System.Drawing.Size(145, 22);
+            this.miEyedropper.Text = "Eyedropper";
+            this.miEyedropper.Click += new System.EventHandler(this.Tool_Click);
             // 
             // mnuView
             // 
             this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuRedraw,
-            this.mnuCellGrid,
-            this.mnuResolution});
+            this.miRedraw,
+            this.miCellGrid,
+            this.miResolution});
             this.mnuView.Name = "mnuView";
             this.mnuView.Size = new System.Drawing.Size(47, 21);
             this.mnuView.Text = "View";
             // 
-            // mnuRedraw
+            // miRedraw
             // 
-            this.mnuRedraw.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuRedrawMap,
-            this.mnuRedrawGrid,
-            this.mnuRedrawChunkGrid});
-            this.mnuRedraw.Name = "mnuRedraw";
-            this.mnuRedraw.Size = new System.Drawing.Size(137, 22);
-            this.mnuRedraw.Text = "Redraw";
+            this.miRedraw.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miRedrawMap,
+            this.miRedrawGrid,
+            this.miRedrawCellGrid,
+            this.miRedrawChunkGrid});
+            this.miRedraw.Name = "miRedraw";
+            this.miRedraw.Size = new System.Drawing.Size(180, 22);
+            this.miRedraw.Text = "Redraw";
             // 
-            // mnuRedrawMap
+            // miRedrawMap
             // 
-            this.mnuRedrawMap.Name = "mnuRedrawMap";
-            this.mnuRedrawMap.Size = new System.Drawing.Size(141, 22);
-            this.mnuRedrawMap.Text = "Map";
-            this.mnuRedrawMap.Click += new System.EventHandler(this.RedrawMap_Click);
+            this.miRedrawMap.Name = "miRedrawMap";
+            this.miRedrawMap.Size = new System.Drawing.Size(180, 22);
+            this.miRedrawMap.Text = "Map";
+            this.miRedrawMap.Click += new System.EventHandler(this.RedrawMap_Click);
             // 
-            // mnuRedrawGrid
+            // miRedrawGrid
             // 
-            this.mnuRedrawGrid.Name = "mnuRedrawGrid";
-            this.mnuRedrawGrid.Size = new System.Drawing.Size(141, 22);
-            this.mnuRedrawGrid.Text = "Grid";
-            this.mnuRedrawGrid.Click += new System.EventHandler(this.RedrawGrid_Click);
+            this.miRedrawGrid.Name = "miRedrawGrid";
+            this.miRedrawGrid.Size = new System.Drawing.Size(180, 22);
+            this.miRedrawGrid.Text = "Grid";
+            this.miRedrawGrid.Click += new System.EventHandler(this.RedrawGrid_Click);
             // 
-            // mnuRedrawChunkGrid
+            // miRedrawChunkGrid
             // 
-            this.mnuRedrawChunkGrid.Name = "mnuRedrawChunkGrid";
-            this.mnuRedrawChunkGrid.Size = new System.Drawing.Size(141, 22);
-            this.mnuRedrawChunkGrid.Text = "Chunk Grid";
-            this.mnuRedrawChunkGrid.Click += new System.EventHandler(this.RedrawChunkGrid_Click);
+            this.miRedrawChunkGrid.Name = "miRedrawChunkGrid";
+            this.miRedrawChunkGrid.Size = new System.Drawing.Size(180, 22);
+            this.miRedrawChunkGrid.Text = "Chunk Grid";
+            this.miRedrawChunkGrid.Click += new System.EventHandler(this.RedrawChunkGrid_Click);
             // 
-            // mnuCellGrid
+            // miCellGrid
             // 
-            this.mnuCellGrid.Name = "mnuCellGrid";
-            this.mnuCellGrid.Size = new System.Drawing.Size(137, 22);
-            this.mnuCellGrid.Text = "Cell grid";
+            this.miCellGrid.Name = "miCellGrid";
+            this.miCellGrid.Size = new System.Drawing.Size(180, 22);
+            this.miCellGrid.Text = "Cell grid";
+            this.miCellGrid.Click += new System.EventHandler(this.CellGrid_Click);
             // 
-            // mnuResolution
+            // miResolution
             // 
-            this.mnuResolution.Name = "mnuResolution";
-            this.mnuResolution.Size = new System.Drawing.Size(137, 22);
-            this.mnuResolution.Text = "Resolution";
-            this.mnuResolution.Click += new System.EventHandler(this.Resolution_Click);
+            this.miResolution.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuResolution1,
+            this.miResolution2,
+            this.miResolution4,
+            this.miResolution8,
+            this.miResolution16,
+            this.miResolution32,
+            this.miResolution64,
+            this.miResolution128});
+            this.miResolution.Name = "miResolution";
+            this.miResolution.Size = new System.Drawing.Size(180, 22);
+            this.miResolution.Text = "Resolution";
+            // 
+            // mnuResolution1
+            // 
+            this.mnuResolution1.Name = "mnuResolution1";
+            this.mnuResolution1.Size = new System.Drawing.Size(180, 22);
+            this.mnuResolution1.Tag = "128";
+            this.mnuResolution1.Text = "1×1";
+            this.mnuResolution1.Click += new System.EventHandler(this.Resolution_Click);
+            // 
+            // miResolution2
+            // 
+            this.miResolution2.Name = "miResolution2";
+            this.miResolution2.Size = new System.Drawing.Size(180, 22);
+            this.miResolution2.Tag = "64";
+            this.miResolution2.Text = "2×2";
+            this.miResolution2.Click += new System.EventHandler(this.Resolution_Click);
+            // 
+            // miResolution4
+            // 
+            this.miResolution4.Name = "miResolution4";
+            this.miResolution4.Size = new System.Drawing.Size(180, 22);
+            this.miResolution4.Tag = "32";
+            this.miResolution4.Text = "4×4";
+            this.miResolution4.Click += new System.EventHandler(this.Resolution_Click);
+            // 
+            // miResolution8
+            // 
+            this.miResolution8.Name = "miResolution8";
+            this.miResolution8.Size = new System.Drawing.Size(180, 22);
+            this.miResolution8.Tag = "16";
+            this.miResolution8.Text = "8×8";
+            this.miResolution8.Click += new System.EventHandler(this.Resolution_Click);
+            // 
+            // miResolution16
+            // 
+            this.miResolution16.Name = "miResolution16";
+            this.miResolution16.Size = new System.Drawing.Size(180, 22);
+            this.miResolution16.Tag = "8";
+            this.miResolution16.Text = "16×16";
+            this.miResolution16.Click += new System.EventHandler(this.Resolution_Click);
+            // 
+            // miResolution32
+            // 
+            this.miResolution32.Name = "miResolution32";
+            this.miResolution32.Size = new System.Drawing.Size(180, 22);
+            this.miResolution32.Tag = "4";
+            this.miResolution32.Text = "32×32";
+            this.miResolution32.Click += new System.EventHandler(this.Resolution_Click);
+            // 
+            // miResolution64
+            // 
+            this.miResolution64.Name = "miResolution64";
+            this.miResolution64.Size = new System.Drawing.Size(180, 22);
+            this.miResolution64.Tag = "2";
+            this.miResolution64.Text = "64×64";
+            this.miResolution64.Click += new System.EventHandler(this.Resolution_Click);
+            // 
+            // miResolution128
+            // 
+            this.miResolution128.Checked = true;
+            this.miResolution128.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.miResolution128.Name = "miResolution128";
+            this.miResolution128.Size = new System.Drawing.Size(180, 22);
+            this.miResolution128.Tag = "1";
+            this.miResolution128.Text = "128×128";
+            this.miResolution128.Click += new System.EventHandler(this.Resolution_Click);
             // 
             // rbColorLeft
             // 
@@ -242,11 +338,35 @@
             this.rbColorRight.Text = " ";
             this.rbColorRight.UseVisualStyleBackColor = false;
             // 
+            // statusStrip
+            // 
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblPos});
+            this.statusStrip.Location = new System.Drawing.Point(0, 428);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(800, 22);
+            this.statusStrip.TabIndex = 9;
+            this.statusStrip.Text = "statusStrip1";
+            // 
+            // lblPos
+            // 
+            this.lblPos.Name = "lblPos";
+            this.lblPos.Size = new System.Drawing.Size(37, 17);
+            this.lblPos.Text = "(0, 0)";
+            // 
+            // miRedrawCellGrid
+            // 
+            this.miRedrawCellGrid.Name = "miRedrawCellGrid";
+            this.miRedrawCellGrid.Size = new System.Drawing.Size(180, 22);
+            this.miRedrawCellGrid.Text = "Cell grid";
+            this.miRedrawCellGrid.Click += new System.EventHandler(this.RedrawCellGrid_Click);
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.pnlColorViewer);
             this.Controls.Add(this.picCanvas);
             this.Controls.Add(this.lvColorPicker);
@@ -259,6 +379,8 @@
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.pnlColorViewer.ResumeLayout(false);
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -270,22 +392,34 @@
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem mnuFile;
         private System.Windows.Forms.ToolStripMenuItem mnuView;
-        private System.Windows.Forms.ToolStripMenuItem mnuCellGrid;
+        private System.Windows.Forms.ToolStripMenuItem miCellGrid;
         private System.Windows.Forms.ToolStripMenuItem mnuEdit;
-        private System.Windows.Forms.ToolStripMenuItem mnuBrush;
-        private System.Windows.Forms.ToolStripMenuItem mnuBrushSize;
-        private System.Windows.Forms.ToolStripMenuItem mnuBuild;
-        private System.Windows.Forms.ToolStripMenuItem mnuRedraw;
-        private System.Windows.Forms.ToolStripMenuItem mnuRedrawMap;
-        private System.Windows.Forms.ToolStripMenuItem mnuRedrawGrid;
-        private System.Windows.Forms.ToolStripMenuItem mnuRedrawChunkGrid;
-        private System.Windows.Forms.ToolStripMenuItem mnuOpen;
-        private System.Windows.Forms.ToolStripMenuItem mnuBucket;
-        private System.Windows.Forms.ToolStripMenuItem mnuResolution;
-        private System.Windows.Forms.ToolStripMenuItem mnuEyedropper;
+        private System.Windows.Forms.ToolStripMenuItem miBrush;
+        private System.Windows.Forms.ToolStripMenuItem miBrushSize;
+        private System.Windows.Forms.ToolStripMenuItem miBuild;
+        private System.Windows.Forms.ToolStripMenuItem miRedraw;
+        private System.Windows.Forms.ToolStripMenuItem miRedrawMap;
+        private System.Windows.Forms.ToolStripMenuItem miRedrawGrid;
+        private System.Windows.Forms.ToolStripMenuItem miRedrawChunkGrid;
+        private System.Windows.Forms.ToolStripMenuItem miOpen;
+        private System.Windows.Forms.ToolStripMenuItem miBucket;
+        private System.Windows.Forms.ToolStripMenuItem miResolution;
+        private System.Windows.Forms.ToolStripMenuItem miEyedropper;
         private System.Windows.Forms.RadioButton rbColorLeft;
         private System.Windows.Forms.Panel pnlColorViewer;
         private System.Windows.Forms.RadioButton rbColorRight;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel lblPos;
+        private System.Windows.Forms.ToolStripMenuItem miNew;
+        private System.Windows.Forms.ToolStripMenuItem mnuResolution1;
+        private System.Windows.Forms.ToolStripMenuItem miResolution2;
+        private System.Windows.Forms.ToolStripMenuItem miResolution4;
+        private System.Windows.Forms.ToolStripMenuItem miResolution8;
+        private System.Windows.Forms.ToolStripMenuItem miResolution16;
+        private System.Windows.Forms.ToolStripMenuItem miResolution32;
+        private System.Windows.Forms.ToolStripMenuItem miResolution64;
+        private System.Windows.Forms.ToolStripMenuItem miResolution128;
+        private System.Windows.Forms.ToolStripMenuItem miRedrawCellGrid;
     }
 }
 
