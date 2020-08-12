@@ -46,6 +46,7 @@
             this.mnuRedrawChunkGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCellGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuResolution = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEyedropper = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.picCanvas)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -121,7 +122,8 @@
             // 
             this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuBrush,
-            this.mnuBucket});
+            this.mnuBucket,
+            this.mnuEyedropper});
             this.mnuEdit.Name = "mnuEdit";
             this.mnuEdit.Size = new System.Drawing.Size(42, 21);
             this.mnuEdit.Text = "Edit";
@@ -133,7 +135,7 @@
             this.mnuBrush.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuBrushSize});
             this.mnuBrush.Name = "mnuBrush";
-            this.mnuBrush.Size = new System.Drawing.Size(115, 22);
+            this.mnuBrush.Size = new System.Drawing.Size(180, 22);
             this.mnuBrush.Text = "Brush";
             this.mnuBrush.Click += new System.EventHandler(this.Tool_Click);
             // 
@@ -147,7 +149,7 @@
             // mnuBucket
             // 
             this.mnuBucket.Name = "mnuBucket";
-            this.mnuBucket.Size = new System.Drawing.Size(115, 22);
+            this.mnuBucket.Size = new System.Drawing.Size(180, 22);
             this.mnuBucket.Text = "Bucket";
             this.mnuBucket.Click += new System.EventHandler(this.Tool_Click);
             // 
@@ -168,42 +170,49 @@
             this.mnuRedrawGrid,
             this.mnuRedrawChunkGrid});
             this.mnuRedraw.Name = "mnuRedraw";
-            this.mnuRedraw.Size = new System.Drawing.Size(180, 22);
+            this.mnuRedraw.Size = new System.Drawing.Size(137, 22);
             this.mnuRedraw.Text = "Redraw";
             // 
             // mnuRedrawMap
             // 
             this.mnuRedrawMap.Name = "mnuRedrawMap";
-            this.mnuRedrawMap.Size = new System.Drawing.Size(180, 22);
+            this.mnuRedrawMap.Size = new System.Drawing.Size(141, 22);
             this.mnuRedrawMap.Text = "Map";
             this.mnuRedrawMap.Click += new System.EventHandler(this.RedrawMap_Click);
             // 
             // mnuRedrawGrid
             // 
             this.mnuRedrawGrid.Name = "mnuRedrawGrid";
-            this.mnuRedrawGrid.Size = new System.Drawing.Size(180, 22);
+            this.mnuRedrawGrid.Size = new System.Drawing.Size(141, 22);
             this.mnuRedrawGrid.Text = "Grid";
             this.mnuRedrawGrid.Click += new System.EventHandler(this.RedrawGrid_Click);
             // 
             // mnuRedrawChunkGrid
             // 
             this.mnuRedrawChunkGrid.Name = "mnuRedrawChunkGrid";
-            this.mnuRedrawChunkGrid.Size = new System.Drawing.Size(180, 22);
+            this.mnuRedrawChunkGrid.Size = new System.Drawing.Size(141, 22);
             this.mnuRedrawChunkGrid.Text = "Chunk Grid";
             this.mnuRedrawChunkGrid.Click += new System.EventHandler(this.RedrawChunkGrid_Click);
             // 
             // mnuCellGrid
             // 
             this.mnuCellGrid.Name = "mnuCellGrid";
-            this.mnuCellGrid.Size = new System.Drawing.Size(180, 22);
+            this.mnuCellGrid.Size = new System.Drawing.Size(137, 22);
             this.mnuCellGrid.Text = "Cell grid";
             // 
             // mnuResolution
             // 
             this.mnuResolution.Name = "mnuResolution";
-            this.mnuResolution.Size = new System.Drawing.Size(180, 22);
+            this.mnuResolution.Size = new System.Drawing.Size(137, 22);
             this.mnuResolution.Text = "Resolution";
             this.mnuResolution.Click += new System.EventHandler(this.Resolution_Click);
+            // 
+            // mnuEyedropper
+            // 
+            this.mnuEyedropper.Name = "mnuEyedropper";
+            this.mnuEyedropper.Size = new System.Drawing.Size(180, 22);
+            this.mnuEyedropper.Text = "Eyedropper";
+            this.mnuEyedropper.Click += new System.EventHandler(this.Tool_Click);
             // 
             // MapEditor
             // 
@@ -245,6 +254,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuOpen;
         private System.Windows.Forms.ToolStripMenuItem mnuBucket;
         private System.Windows.Forms.ToolStripMenuItem mnuResolution;
+        private System.Windows.Forms.ToolStripMenuItem mnuEyedropper;
     }
 }
 

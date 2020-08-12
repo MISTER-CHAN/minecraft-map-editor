@@ -288,20 +288,27 @@ namespace MinecraftMapEditor
             {
                 if (0 <= e.X && e.X < picCanvas.ClientRectangle.Width && 0 <= e.Y && e.Y < picCanvas.ClientRectangle.Height)
                 {
-                    byte left = (byte)((byte)((float)e.X / picCanvas.ClientRectangle.Width * 0x80 / resolution - brushSize / 2) * resolution),
-                        top = (byte)((byte)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80 / resolution - brushSize / 2) * resolution);
-                    for (byte y = top; y < top + brushSize * resolution; y++)
+                    if (mnuBrush.Checked)
                     {
-                        if (y >= 0x80)
-                            break;
-                        for (byte x = left; x < left + brushSize * resolution; x++)
+                        byte left = (byte)((byte)((float)e.X / picCanvas.ClientRectangle.Width * 0x80 / resolution - brushSize / 2) * resolution),
+                            top = (byte)((byte)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80 / resolution - brushSize / 2) * resolution);
+                        for (byte y = top; y < top + brushSize * resolution; y++)
                         {
-                            if (x >= 0x80)
+                            if (y >= 0x80)
                                 break;
-                            colors[x, y] = selColor;
+                            for (byte x = left; x < left + brushSize * resolution; x++)
+                            {
+                                if (x >= 0x80)
+                                    break;
+                                colors[x, y] = selColor;
+                            }
                         }
+                        graphics.FillRectangle(brush, new RectangleF(left * size, top * size, brushSize * size * resolution, brushSize * size * resolution));
                     }
-                    graphics.FillRectangle(brush, new RectangleF(left * size, top * size, brushSize * size * resolution, brushSize * size * resolution));
+                    else if (mnuEyedropper.Checked)
+                    {
+                        lvColorPicker.Items[colors[(byte)((float)e.X / picCanvas.ClientRectangle.Width * 0x80), (byte)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80)]].Selected = true;
+                    }
                 }
             }
         }
@@ -431,6 +438,7 @@ namespace MinecraftMapEditor
         {
             mnuBrush.Checked = false;
             mnuBucket.Checked = false;
+            mnuEyedropper.Checked = false;
             ((ToolStripMenuItem)sender).Checked = true;
         }
     }
