@@ -16,7 +16,7 @@ namespace MinecraftMapEditor
     {
         bool isPainting = false;
         Brush brush = new SolidBrush(Color.White);
-        byte cellSize = 0, resolution = 1, selColor = 0, selColorLeft = 0, selColorRight = 0;
+        byte cellSize = 0, resolution = 1, selColor = 0;
         byte[,] colors = new byte[0x80, 0x80];
         Graphics graphics;
         float size;
@@ -232,42 +232,42 @@ namespace MinecraftMapEditor
             Color.FromArgb(31, 18, 13),
             Color.FromArgb(37, 22, 16),
             Color.FromArgb(19, 11, 8),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
+            Color.FromArgb(133, 33, 34),
+            Color.FromArgb(163, 41, 42),
+            Color.FromArgb(189, 48, 49),
+            Color.FromArgb(100, 25, 25),
+            Color.FromArgb(104, 44, 68),
+            Color.FromArgb(127, 54, 83),
+            Color.FromArgb(148, 63, 97),
+            Color.FromArgb(78, 33, 51),
+            Color.FromArgb(64, 17, 20),
+            Color.FromArgb(79, 21, 25),
+            Color.FromArgb(92, 25, 29),
+            Color.FromArgb(48, 13, 15),
+            Color.FromArgb(15, 88, 94),
+            Color.FromArgb(18, 108, 115),
+            Color.FromArgb(22, 126, 134),
+            Color.FromArgb(11, 66, 70),
+            Color.FromArgb(40, 100, 98),
+            Color.FromArgb(50, 122, 120),
+            Color.FromArgb(58, 142, 140),
+            Color.FromArgb(30, 75, 74),
+            Color.FromArgb(60, 31, 43),
+            Color.FromArgb(74, 37, 53),
+            Color.FromArgb(86, 44, 62),
+            Color.FromArgb(45, 23, 32),
+            Color.FromArgb(14, 127, 93),
+            Color.FromArgb(17, 155, 114),
+            Color.FromArgb(20, 180, 133),
+            Color.FromArgb(10, 95, 70),
+            Color.FromArgb(60, 60, 60),
+            Color.FromArgb(74, 74, 74),
+            Color.FromArgb(86, 86, 86),
+            Color.FromArgb(45, 45, 45),
+            Color.FromArgb(131, 105, 88),
+            Color.FromArgb(160, 129, 108),
+            Color.FromArgb(186, 150, 126),
+            Color.FromArgb(98, 79, 66),
             Color.FromArgb(255, 255, 255),
             Color.FromArgb(255, 255, 255),
             Color.FromArgb(255, 255, 255),
@@ -304,28 +304,24 @@ namespace MinecraftMapEditor
                 }
             }
             Clipboard.SetText(s.Substring(0, s.Length - 1));
-            MessageBox.Show("Done", "Map Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Done! Saved to clipboard.", "Map Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void Canvas_MouseDown(object sender, MouseEventArgs e)
         {
+            if (brush != null)
+                brush.Dispose();
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    selColor = selColorLeft;
-                    rbColorLeft.Checked = true;
+                    selColor = byte.Parse(lblColorLeft.Text);
                     break;
                 case MouseButtons.Right:
-                    selColor = selColorRight;
-                    rbColorRight.Checked = true;
+                    selColor = byte.Parse(lblColorRight.Text);
                     break;
-                default:
-                    return;
             }
-            if (brush != null)
-                brush.Dispose();
             brush = new SolidBrush(colorTable[selColor]);
-            if (miBucket.Checked)
+            if (rbBucket.Checked)
             {
                 byte c = colors[(byte)((float)e.X / picCanvas.ClientRectangle.Width * 0x80),
                     (byte)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80)];
@@ -351,11 +347,11 @@ namespace MinecraftMapEditor
             int x = (int)((float)e.X / picCanvas.ClientRectangle.Width * 0x80),
                 y = (int)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80);
             lblPos.Text = $"({x - 0x40}, {y - 0x40})";
-            if (isPainting && !miBucket.Checked)
+            if (isPainting && !rbBucket.Checked)
             {
                 if (0 <= e.X && e.X < picCanvas.ClientRectangle.Width && 0 <= e.Y && e.Y < picCanvas.ClientRectangle.Height)
                 {
-                    if (miBrush.Checked)
+                    if (rbBrush.Checked)
                     {
                         byte left = (byte)((byte)(x / resolution - brushSize / 2) * resolution),
                             top = (byte)((byte)(y / resolution - brushSize / 2) * resolution);
@@ -372,9 +368,20 @@ namespace MinecraftMapEditor
                         }
                         graphics.FillRectangle(brush, new RectangleF(left * size, top * size, brushSize * size * resolution, brushSize * size * resolution));
                     }
-                    else if (miEyedropper.Checked)
+                    else if (rbEyedropper.Checked)
                     {
-                        lvColorPicker.Items[colors[(byte)((float)e.X / picCanvas.ClientRectangle.Width * 0x80), (byte)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80)]].Selected = true;
+                        byte color = colors[(byte)((float)e.X / picCanvas.ClientRectangle.Width * 0x80), (byte)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80)];
+                        switch (e.Button)
+                        {
+                            case MouseButtons.Left:
+                                lblColorLeft.Text = color + "";
+                                lblColorLeft.BackColor = colorTable[color];
+                                break;
+                            case MouseButtons.Right:
+                                lblColorRight.Text = color + "";
+                                lblColorRight.BackColor = colorTable[color];
+                                break;
+                        }
                     }
                 }
             }
@@ -395,21 +402,26 @@ namespace MinecraftMapEditor
             }
         }
 
-        private void ColorPicker_SelectedIndexChanged(object sender, EventArgs e)
+        private void ColorPicker_MouseClick(object sender, MouseEventArgs e)
         {
             if (lvColorPicker.SelectedItems.Count > 0)
             {
-                if (rbColorLeft.Checked)
+                switch (e.Button)
                 {
-                    selColorLeft = (byte)lvColorPicker.SelectedItems[0].Index;
-                    rbColorLeft.BackColor = lvColorPicker.SelectedItems[0].BackColor;
-                }
-                else if (rbColorRight.Checked)
-                {
-                    selColorRight = (byte)lvColorPicker.SelectedItems[0].Index;
-                    rbColorRight.BackColor = lvColorPicker.SelectedItems[0].BackColor;
+                    case MouseButtons.Left:
+                        lblColorLeft.Text = lvColorPicker.SelectedItems[0].Text;
+                        lblColorLeft.BackColor = lvColorPicker.SelectedItems[0].BackColor;
+                        break;
+                    case MouseButtons.Right:
+                        lblColorRight.Text = lvColorPicker.SelectedItems[0].Text;
+                        lblColorRight.BackColor = lvColorPicker.SelectedItems[0].BackColor;
+                        break;
                 }
             }
+        }
+
+        private void ColorPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
 
         private void MapEditor_Resize(object sender, EventArgs e)
@@ -434,7 +446,7 @@ namespace MinecraftMapEditor
 
         private void Open_Click(object sender, EventArgs e)
         {
-            string s = Interaction.InputBox("Colors", "Open", Clipboard.GetText());
+            string s = Interaction.InputBox("Format:\n<Decimal color ID>  <Decimal color ID>  ... (16 per line)\n<Decimal color ID>  <Decimal color ID>  ... (16 per line)\n... (1024 lines in total)\n\nPaste colors:", "Open", Clipboard.GetText());
             if (s != "")
             {
                 s = Clipboard.GetText();
@@ -500,22 +512,23 @@ namespace MinecraftMapEditor
 
         void ResizeCanvas()
         {
-            picCanvas.Top = menuStrip.Height;
-            pnlColorViewer.Top = ClientRectangle.Height - statusStrip.Height - pnlColorViewer.Height;
-            lvColorPicker.Location = new Point(pnlColorViewer.Width, pnlColorViewer.Top);
-            lvColorPicker.Width = ClientRectangle.Width - pnlColorViewer.Width;
-            if (ClientRectangle.Width >= lvColorPicker.Top - menuStrip.Height)
-            {
-                picCanvas.Size = new Size(lvColorPicker.Top - menuStrip.Height, lvColorPicker.Top - menuStrip.Height);
-                picCanvas.Left = ClientRectangle.Width / 2 - picCanvas.Width / 2;
-                size = (float)picCanvas.ClientRectangle.Width / 0x80;
-            }
-            else
-            {
-                picCanvas.Size = new Size(ClientRectangle.Width, ClientRectangle.Width);
-                picCanvas.Top = ClientRectangle.Height / 2 - picCanvas.Height / 2;
-                size = (float)picCanvas.ClientRectangle.Height / 0x80;
-            }
+            int height = ClientRectangle.Height - menuStrip.Height - statusStrip.Height;
+            rbBrush.Size = rbEyedropper.Size;
+            rbBucket.Size = rbEyedropper.Size;
+            rbBucket.Top = rbBrush.Height;
+            rbEyedropper.Top = rbBucket.Top + rbBucket.Height;
+            pnlTools.Size = new Size(rbEyedropper.Width, rbEyedropper.Top + rbEyedropper.Height);
+            pnlTools.Top = menuStrip.Height;
+            picCanvas.Size = new Size(height, height);
+            picCanvas.Location = new Point(pnlTools.Width, menuStrip.Height);
+            size = (float)picCanvas.ClientRectangle.Height / 0x80;
+            pnlColorViewer.Location = new Point(picCanvas.Left + picCanvas.Width, menuStrip.Height);
+            pnlColorViewer.Width = ClientRectangle.Width - picCanvas.Left - picCanvas.Width;
+            lblColorLeft.Width = pnlColorViewer.Width / 2;
+            lblColorRight.Width = pnlColorViewer.Width / 2;
+            lblColorRight.Left = pnlColorViewer.Width / 2;
+            lvColorPicker.Location = new Point(picCanvas.Left + picCanvas.Width, menuStrip.Height + pnlColorViewer.Height);
+            lvColorPicker.Size = new Size(pnlColorViewer.Width, height - pnlColorViewer.Height);
             if (graphics != null)
             {
                 graphics.Flush();
@@ -532,14 +545,6 @@ namespace MinecraftMapEditor
             ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
             resolution = byte.Parse(menuItem.Tag + "");
             menuItem.Checked = true;
-        }
-
-        private void Tool_Click(object sender, EventArgs e)
-        {
-            miBrush.Checked = false;
-            miBucket.Checked = false;
-            miEyedropper.Checked = false;
-            ((ToolStripMenuItem)sender).Checked = true;
         }
     }
 }
