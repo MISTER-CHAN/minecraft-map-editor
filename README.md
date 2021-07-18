@@ -3,7 +3,7 @@ Map Editor for Minecraft JAVA Edition
 - Use with NBTExplorer
 ## Usage
 ### How to create a map:
-- Enter your minecraft world, make a empty map then use it.
+- Enter your minecraft world, make a filled map.
 - IMPORTANT: The map must be LOCKED!
 ### How to open an existing map:
 - Run NBTExplorer, open map_#.dat in .minecraft\saves&#92;&#60;World Name>\data\
