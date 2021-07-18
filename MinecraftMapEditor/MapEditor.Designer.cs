@@ -54,6 +54,8 @@
             this.miResolution32 = new System.Windows.Forms.ToolStripMenuItem();
             this.miResolution64 = new System.Windows.Forms.ToolStripMenuItem();
             this.miResolution128 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.miCredits = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlColorViewer = new System.Windows.Forms.Panel();
             this.lblColorRight = new System.Windows.Forms.Label();
             this.lblColorLeft = new System.Windows.Forms.Label();
@@ -63,6 +65,7 @@
             this.rbEyedropper = new System.Windows.Forms.RadioButton();
             this.rbBucket = new System.Windows.Forms.RadioButton();
             this.rbBrush = new System.Windows.Forms.RadioButton();
+            this.miUsage = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.picCanvas)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.pnlColorViewer.SuspendLayout();
@@ -103,11 +106,12 @@
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
             this.mnuEdit,
-            this.mnuView});
+            this.mnuView,
+            this.mnuHelp});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Padding = new System.Windows.Forms.Padding(9, 2, 0, 2);
-            this.menuStrip.Size = new System.Drawing.Size(1200, 30);
+            this.menuStrip.Size = new System.Drawing.Size(1200, 28);
             this.menuStrip.TabIndex = 6;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -118,7 +122,7 @@
             this.miOpen,
             this.miBuild});
             this.mnuFile.Name = "mnuFile";
-            this.mnuFile.Size = new System.Drawing.Size(48, 26);
+            this.mnuFile.Size = new System.Drawing.Size(48, 24);
             this.mnuFile.Text = "File";
             // 
             // miNew
@@ -146,7 +150,7 @@
             this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miBrush});
             this.mnuEdit.Name = "mnuEdit";
-            this.mnuEdit.Size = new System.Drawing.Size(51, 26);
+            this.mnuEdit.Size = new System.Drawing.Size(51, 24);
             this.mnuEdit.Text = "Edit";
             // 
             // miBrush
@@ -171,7 +175,7 @@
             this.miCellGrid,
             this.miResolution});
             this.mnuView.Name = "mnuView";
-            this.mnuView.Size = new System.Drawing.Size(58, 26);
+            this.mnuView.Size = new System.Drawing.Size(58, 24);
             this.mnuView.Text = "View";
             // 
             // miRedraw
@@ -203,7 +207,7 @@
             // 
             this.miRedrawCellGrid.Name = "miRedrawCellGrid";
             this.miRedrawCellGrid.Size = new System.Drawing.Size(172, 26);
-            this.miRedrawCellGrid.Text = "Cell grid";
+            this.miRedrawCellGrid.Text = "Cell Grid";
             this.miRedrawCellGrid.Click += new System.EventHandler(this.RedrawCellGrid_Click);
             // 
             // miRedrawChunkGrid
@@ -217,7 +221,7 @@
             // 
             this.miCellGrid.Name = "miCellGrid";
             this.miCellGrid.Size = new System.Drawing.Size(170, 26);
-            this.miCellGrid.Text = "Cell grid";
+            this.miCellGrid.Text = "Cell Grid";
             this.miCellGrid.Click += new System.EventHandler(this.CellGrid_Click);
             // 
             // miResolution
@@ -300,6 +304,22 @@
             this.miResolution128.Tag = "1";
             this.miResolution128.Text = "128×128";
             this.miResolution128.Click += new System.EventHandler(this.Resolution_Click);
+            // 
+            // mnuHelp
+            // 
+            this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miUsage,
+            this.miCredits});
+            this.mnuHelp.Name = "mnuHelp";
+            this.mnuHelp.Size = new System.Drawing.Size(58, 24);
+            this.mnuHelp.Text = "Help";
+            // 
+            // miCredits
+            // 
+            this.miCredits.Name = "miCredits";
+            this.miCredits.Size = new System.Drawing.Size(224, 26);
+            this.miCredits.Text = "About";
+            this.miCredits.Click += new System.EventHandler(this.Credits_Click);
             // 
             // pnlColorViewer
             // 
@@ -397,6 +417,13 @@
             this.rbBrush.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbBrush.UseVisualStyleBackColor = true;
             // 
+            // miUsage
+            // 
+            this.miUsage.Name = "miUsage";
+            this.miUsage.Size = new System.Drawing.Size(224, 26);
+            this.miUsage.Text = "Help";
+            this.miUsage.Click += new System.EventHandler(this.Usage_Click);
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
@@ -463,6 +490,9 @@
         private System.Windows.Forms.RadioButton rbEyedropper;
         private System.Windows.Forms.RadioButton rbBucket;
         private System.Windows.Forms.RadioButton rbBrush;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelp;
+        private System.Windows.Forms.ToolStripMenuItem miCredits;
+        private System.Windows.Forms.ToolStripMenuItem miUsage;
     }
 }
 

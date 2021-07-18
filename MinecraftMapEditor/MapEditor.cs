@@ -424,6 +424,11 @@ namespace MinecraftMapEditor
         {
         }
 
+        private void Credits_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Author\tMISTER_CHAN\nWebsite\thttps://github.com/MISTER-CHAN/MinecraftMapEditor", "Credits");
+        }
+
         private void MapEditor_Resize(object sender, EventArgs e)
         {
             ResizeCanvas();
@@ -545,6 +550,11 @@ namespace MinecraftMapEditor
             ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
             resolution = byte.Parse(menuItem.Tag + "");
             menuItem.Checked = true;
+        }
+
+        private void Usage_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("See https://github.com/MISTER-CHAN/MinecraftMapEditor", "Usage");
         }
     }
 }
