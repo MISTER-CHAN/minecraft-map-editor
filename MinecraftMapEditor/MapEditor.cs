@@ -14,277 +14,85 @@ namespace MinecraftMapEditor
 {
     public partial class MapEditor : Form
     {
-        bool isPainting = false;
-        Brush brush = new SolidBrush(Color.White);
-        byte cellSize = 0, resolution = 1, selColor = 0;
-        byte[,] colors = new byte[0x80, 0x80];
-        Graphics graphics;
-        float size;
-        int brushSize = 1;
-        Pen pen = new Pen(Color.Black);
-        Color[] colorTable = new Color[0x100]
+        private bool isPainting = false;
+        private Brush brush = new SolidBrush(Color.White);
+        private byte cellSize = 0, resolution = 1, selColor = 0;
+        private readonly byte[,] colors = new byte[0x80, 0x80];
+        private Graphics graphics;
+        private float size;
+        private int brushSize = 1;
+        private readonly Pen pen = new Pen(Color.Black);
+        private readonly Color[] colorTable = new Color[0x100]
         {
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(89, 125, 39),
-            Color.FromArgb(109, 153, 48),
-            Color.FromArgb(127, 178, 56),
-            Color.FromArgb(67, 94, 29),
-            Color.FromArgb(174, 164, 115),
-            Color.FromArgb(213, 201, 140),
-            Color.FromArgb(247, 233, 163),
-            Color.FromArgb(130, 123, 86),
-            Color.FromArgb(140, 140, 140),
-            Color.FromArgb(171, 171, 171),
-            Color.FromArgb(199, 199, 199),
-            Color.FromArgb(105, 105, 105),
-            Color.FromArgb(180, 0, 0),
-            Color.FromArgb(220, 0, 0),
-            Color.FromArgb(255, 0, 0),
-            Color.FromArgb(135, 0, 0),
-            Color.FromArgb(112, 112, 180),
-            Color.FromArgb(138, 138, 220),
-            Color.FromArgb(160, 160, 255),
-            Color.FromArgb(84, 84, 135),
-            Color.FromArgb(117, 117, 117),
-            Color.FromArgb(144, 144, 144),
-            Color.FromArgb(167, 167, 167),
-            Color.FromArgb(88, 88, 88),
-            Color.FromArgb(0, 87, 0),
-            Color.FromArgb(0, 106, 0),
-            Color.FromArgb(0, 124, 0),
-            Color.FromArgb(0, 65, 0),
-            Color.FromArgb(180, 180, 180),
-            Color.FromArgb(220, 220, 220),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(135, 135, 135),
-            Color.FromArgb(115, 118, 129),
-            Color.FromArgb(141, 144, 158),
-            Color.FromArgb(164, 168, 184),
-            Color.FromArgb(86, 88, 97),
-            Color.FromArgb(106, 76, 54),
-            Color.FromArgb(130, 94, 66),
-            Color.FromArgb(151, 109, 77),
-            Color.FromArgb(79, 57, 40),
-            Color.FromArgb(79, 79, 79),
-            Color.FromArgb(96, 96, 96),
-            Color.FromArgb(112, 112, 112),
-            Color.FromArgb(59, 59, 59),
-            Color.FromArgb(45, 45, 180),
-            Color.FromArgb(55, 55, 220),
-            Color.FromArgb(64, 64, 255),
-            Color.FromArgb(33, 33, 135),
-            Color.FromArgb(100, 84, 50),
-            Color.FromArgb(123, 102, 62),
-            Color.FromArgb(143, 119, 72),
-            Color.FromArgb(75, 63, 38),
-            Color.FromArgb(180, 177, 172),
-            Color.FromArgb(220, 217, 211),
-            Color.FromArgb(255, 252, 245),
-            Color.FromArgb(135, 133, 129),
-            Color.FromArgb(152, 89, 36),
-            Color.FromArgb(186, 109, 44),
-            Color.FromArgb(216, 127, 51),
-            Color.FromArgb(114, 67, 27),
-            Color.FromArgb(125, 53, 152),
-            Color.FromArgb(153, 65, 186),
-            Color.FromArgb(178, 76, 216),
-            Color.FromArgb(94, 40, 114),
-            Color.FromArgb(72, 108, 152),
-            Color.FromArgb(88, 132, 186),
-            Color.FromArgb(102, 153, 216),
-            Color.FromArgb(54, 81, 114),
-            Color.FromArgb(161, 161, 36),
-            Color.FromArgb(197, 197, 44),
-            Color.FromArgb(229, 229, 51),
-            Color.FromArgb(121, 121, 27),
-            Color.FromArgb(89, 144, 17),
-            Color.FromArgb(109, 176, 21),
-            Color.FromArgb(127, 204, 25),
-            Color.FromArgb(67, 108, 13),
-            Color.FromArgb(170, 89, 116),
-            Color.FromArgb(208, 109, 142),
-            Color.FromArgb(242, 127, 165),
-            Color.FromArgb(128, 67, 87),
-            Color.FromArgb(53, 53, 53),
-            Color.FromArgb(65, 65, 65),
-            Color.FromArgb(76, 76, 76),
-            Color.FromArgb(40, 40, 40),
-            Color.FromArgb(108, 108, 108),
-            Color.FromArgb(132, 132, 132),
-            Color.FromArgb(153, 153, 153),
-            Color.FromArgb(81, 81, 81),
-            Color.FromArgb(53, 89, 108),
-            Color.FromArgb(65, 109, 132),
-            Color.FromArgb(76, 127, 153),
-            Color.FromArgb(40, 67, 81),
-            Color.FromArgb(89, 44, 125),
-            Color.FromArgb(109, 54, 153),
-            Color.FromArgb(127, 63, 178),
-            Color.FromArgb(67, 33, 94),
-            Color.FromArgb(36, 53, 125),
-            Color.FromArgb(44, 65, 153),
-            Color.FromArgb(51, 76, 178),
-            Color.FromArgb(27, 40, 94),
-            Color.FromArgb(72, 53, 36),
-            Color.FromArgb(88, 65, 44),
-            Color.FromArgb(102, 76, 51),
-            Color.FromArgb(54, 40, 27),
-            Color.FromArgb(72, 89, 36),
-            Color.FromArgb(88, 109, 44),
-            Color.FromArgb(102, 127, 51),
-            Color.FromArgb(54, 67, 27),
-            Color.FromArgb(108, 36, 36),
-            Color.FromArgb(132, 44, 44),
-            Color.FromArgb(153, 51, 51),
-            Color.FromArgb(81, 27, 27),
-            Color.FromArgb(17, 17, 17),
-            Color.FromArgb(21, 21, 21),
-            Color.FromArgb(25, 25, 25),
-            Color.FromArgb(13, 13, 13),
-            Color.FromArgb(176, 168, 54),
-            Color.FromArgb(215, 205, 66),
-            Color.FromArgb(250, 238, 77),
-            Color.FromArgb(132, 126, 40),
-            Color.FromArgb(64, 154, 150),
-            Color.FromArgb(79, 188, 183),
-            Color.FromArgb(92, 219, 213),
-            Color.FromArgb(48, 115, 112),
-            Color.FromArgb(52, 90, 180),
-            Color.FromArgb(63, 110, 220),
-            Color.FromArgb(74, 128, 255),
-            Color.FromArgb(39, 67, 135),
-            Color.FromArgb(0, 153, 40),
-            Color.FromArgb(0, 187, 50),
-            Color.FromArgb(0, 217, 58),
-            Color.FromArgb(0, 114, 30),
-            Color.FromArgb(91, 60, 34),
-            Color.FromArgb(111, 74, 42),
-            Color.FromArgb(129, 86, 49),
-            Color.FromArgb(68, 45, 25),
-            Color.FromArgb(79, 1, 0),
-            Color.FromArgb(96, 1, 0),
-            Color.FromArgb(112, 2, 0),
-            Color.FromArgb(59, 1, 0),
-            Color.FromArgb(147, 124, 113),
-            Color.FromArgb(180, 152, 138),
-            Color.FromArgb(209, 177, 161),
-            Color.FromArgb(110, 93, 85),
-            Color.FromArgb(112, 57, 25),
-            Color.FromArgb(137, 70, 31),
-            Color.FromArgb(159, 82, 36),
-            Color.FromArgb(84, 43, 19),
-            Color.FromArgb(105, 61, 76),
-            Color.FromArgb(128, 75, 93),
-            Color.FromArgb(149, 87, 108),
-            Color.FromArgb(78, 46, 57),
-            Color.FromArgb(79, 76, 97),
-            Color.FromArgb(96, 93, 119),
-            Color.FromArgb(112, 108, 138),
-            Color.FromArgb(59, 57, 73),
-            Color.FromArgb(131, 93, 25),
-            Color.FromArgb(160, 114, 31),
-            Color.FromArgb(186, 133, 36),
-            Color.FromArgb(98, 70, 19),
-            Color.FromArgb(72, 82, 37),
-            Color.FromArgb(88, 100, 45),
-            Color.FromArgb(103, 117, 53),
-            Color.FromArgb(54, 61, 28),
-            Color.FromArgb(112, 54, 55),
-            Color.FromArgb(138, 66, 67),
-            Color.FromArgb(160, 77, 78),
-            Color.FromArgb(84, 40, 41),
-            Color.FromArgb(40, 28, 24),
-            Color.FromArgb(49, 35, 30),
-            Color.FromArgb(57, 41, 35),
-            Color.FromArgb(30, 21, 18),
-            Color.FromArgb(95, 75, 69),
-            Color.FromArgb(116, 92, 84),
-            Color.FromArgb(135, 107, 98),
-            Color.FromArgb(71, 56, 51),
-            Color.FromArgb(61, 64, 64),
-            Color.FromArgb(75, 79, 79),
-            Color.FromArgb(87, 92, 92),
-            Color.FromArgb(46, 48, 48),
-            Color.FromArgb(86, 51, 62),
-            Color.FromArgb(105, 62, 75),
-            Color.FromArgb(122, 73, 88),
-            Color.FromArgb(64, 38, 46),
-            Color.FromArgb(53, 43, 64),
-            Color.FromArgb(65, 53, 79),
-            Color.FromArgb(76, 62, 92),
-            Color.FromArgb(40, 32, 48),
-            Color.FromArgb(53, 35, 24),
-            Color.FromArgb(65, 43, 30),
-            Color.FromArgb(76, 50, 35),
-            Color.FromArgb(40, 26, 18),
-            Color.FromArgb(53, 57, 29),
-            Color.FromArgb(65, 70, 36),
-            Color.FromArgb(76, 82, 42),
-            Color.FromArgb(40, 43, 22),
-            Color.FromArgb(100, 42, 32),
-            Color.FromArgb(122, 51, 39),
-            Color.FromArgb(142, 60, 46),
-            Color.FromArgb(75, 31, 24),
-            Color.FromArgb(26, 15, 11),
-            Color.FromArgb(31, 18, 13),
-            Color.FromArgb(37, 22, 16),
-            Color.FromArgb(19, 11, 8),
-            Color.FromArgb(133, 33, 34),
-            Color.FromArgb(163, 41, 42),
-            Color.FromArgb(189, 48, 49),
-            Color.FromArgb(100, 25, 25),
-            Color.FromArgb(104, 44, 68),
-            Color.FromArgb(127, 54, 83),
-            Color.FromArgb(148, 63, 97),
-            Color.FromArgb(78, 33, 51),
-            Color.FromArgb(64, 17, 20),
-            Color.FromArgb(79, 21, 25),
-            Color.FromArgb(92, 25, 29),
-            Color.FromArgb(48, 13, 15),
-            Color.FromArgb(15, 88, 94),
-            Color.FromArgb(18, 108, 115),
-            Color.FromArgb(22, 126, 134),
-            Color.FromArgb(11, 66, 70),
-            Color.FromArgb(40, 100, 98),
-            Color.FromArgb(50, 122, 120),
-            Color.FromArgb(58, 142, 140),
-            Color.FromArgb(30, 75, 74),
-            Color.FromArgb(60, 31, 43),
-            Color.FromArgb(74, 37, 53),
-            Color.FromArgb(86, 44, 62),
-            Color.FromArgb(45, 23, 32),
-            Color.FromArgb(14, 127, 93),
-            Color.FromArgb(17, 155, 114),
-            Color.FromArgb(20, 180, 133),
-            Color.FromArgb(10, 95, 70),
-            Color.FromArgb(60, 60, 60),
-            Color.FromArgb(74, 74, 74),
-            Color.FromArgb(86, 86, 86),
-            Color.FromArgb(45, 45, 45),
-            Color.FromArgb(131, 105, 88),
-            Color.FromArgb(160, 129, 108),
-            Color.FromArgb(186, 150, 126),
-            Color.FromArgb(98, 79, 66),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255),
-            Color.FromArgb(255, 255, 255)
+            Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255), // 0
+            Color.FromArgb(89, 125, 39), Color.FromArgb(109, 153, 48), Color.FromArgb(127, 178, 56), Color.FromArgb(67, 94, 29), // 1
+            Color.FromArgb(174, 164, 115), Color.FromArgb(213, 201, 140), Color.FromArgb(247, 233, 163), Color.FromArgb(130, 123, 86), // 2
+            Color.FromArgb(140, 140, 140), Color.FromArgb(171, 171, 171), Color.FromArgb(199, 199, 199), Color.FromArgb(105, 105, 105), // 3
+            Color.FromArgb(180, 0, 0), Color.FromArgb(220, 0, 0), Color.FromArgb(255, 0, 0), Color.FromArgb(135, 0, 0), // 4
+            Color.FromArgb(112, 112, 180), Color.FromArgb(138, 138, 220), Color.FromArgb(160, 160, 255), Color.FromArgb(84, 84, 135), // 5
+            Color.FromArgb(117, 117, 117), Color.FromArgb(144, 144, 144), Color.FromArgb(167, 167, 167), Color.FromArgb(88, 88, 88), // 6
+            Color.FromArgb(0, 87, 0), Color.FromArgb(0, 106, 0), Color.FromArgb(0, 124, 0), Color.FromArgb(0, 65, 0), // 7
+            Color.FromArgb(180, 180, 180), Color.FromArgb(220, 220, 220), Color.FromArgb(255, 255, 255), Color.FromArgb(135, 135, 135), // 8
+            Color.FromArgb(115, 118, 129), Color.FromArgb(141, 144, 158), Color.FromArgb(164, 168, 184), Color.FromArgb(86, 88, 97), // 9
+            Color.FromArgb(106, 76, 54), Color.FromArgb(130, 94, 66), Color.FromArgb(151, 109, 77), Color.FromArgb(79, 57, 40), // 10
+            Color.FromArgb(79, 79, 79), Color.FromArgb(96, 96, 96), Color.FromArgb(112, 112, 112), Color.FromArgb(59, 59, 59), // 11
+            Color.FromArgb(45, 45, 180), Color.FromArgb(55, 55, 220), Color.FromArgb(64, 64, 255), Color.FromArgb(33, 33, 135), // 12
+            Color.FromArgb(100, 84, 50), Color.FromArgb(123, 102, 62), Color.FromArgb(143, 119, 72), Color.FromArgb(75, 63, 38), // 13
+            Color.FromArgb(180, 177, 172), Color.FromArgb(220, 217, 211), Color.FromArgb(255, 252, 245), Color.FromArgb(135, 133, 129), // 14
+            Color.FromArgb(152, 89, 36), Color.FromArgb(186, 109, 44), Color.FromArgb(216, 127, 51), Color.FromArgb(114, 67, 27), // 15
+            Color.FromArgb(125, 53, 152), Color.FromArgb(153, 65, 186), Color.FromArgb(178, 76, 216), Color.FromArgb(94, 40, 114), // 16
+            Color.FromArgb(72, 108, 152), Color.FromArgb(88, 132, 186), Color.FromArgb(102, 153, 216), Color.FromArgb(54, 81, 114), // 17
+            Color.FromArgb(161, 161, 36), Color.FromArgb(197, 197, 44), Color.FromArgb(229, 229, 51), Color.FromArgb(121, 121, 27), // 18
+            Color.FromArgb(89, 144, 17), Color.FromArgb(109, 176, 21), Color.FromArgb(127, 204, 25), Color.FromArgb(67, 108, 13), // 19
+            Color.FromArgb(170, 89, 116), Color.FromArgb(208, 109, 142), Color.FromArgb(242, 127, 165), Color.FromArgb(128, 67, 87), // 20
+            Color.FromArgb(53, 53, 53), Color.FromArgb(65, 65, 65), Color.FromArgb(76, 76, 76), Color.FromArgb(40, 40, 40), // 21
+            Color.FromArgb(108, 108, 108), Color.FromArgb(132, 132, 132), Color.FromArgb(153, 153, 153), Color.FromArgb(81, 81, 81), // 22
+            Color.FromArgb(53, 89, 108), Color.FromArgb(65, 109, 132), Color.FromArgb(76, 127, 153), Color.FromArgb(40, 67, 81), // 23
+            Color.FromArgb(89, 44, 125), Color.FromArgb(109, 54, 153), Color.FromArgb(127, 63, 178), Color.FromArgb(67, 33, 94), // 24
+            Color.FromArgb(36, 53, 125), Color.FromArgb(44, 65, 153), Color.FromArgb(51, 76, 178), Color.FromArgb(27, 40, 94), // 25
+            Color.FromArgb(72, 53, 36), Color.FromArgb(88, 65, 44), Color.FromArgb(102, 76, 51), Color.FromArgb(54, 40, 27), // 26
+            Color.FromArgb(72, 89, 36), Color.FromArgb(88, 109, 44), Color.FromArgb(102, 127, 51), Color.FromArgb(54, 67, 27), // 27
+            Color.FromArgb(108, 36, 36), Color.FromArgb(132, 44, 44), Color.FromArgb(153, 51, 51), Color.FromArgb(81, 27, 27), // 28
+            Color.FromArgb(17, 17, 17), Color.FromArgb(21, 21, 21), Color.FromArgb(25, 25, 25), Color.FromArgb(13, 13, 13), // 29
+            Color.FromArgb(176, 168, 54), Color.FromArgb(215, 205, 66), Color.FromArgb(250, 238, 77), Color.FromArgb(132, 126, 40), // 30
+            Color.FromArgb(64, 154, 150), Color.FromArgb(79, 188, 183), Color.FromArgb(92, 219, 213), Color.FromArgb(48, 115, 112), // 31
+            Color.FromArgb(52, 90, 180), Color.FromArgb(63, 110, 220), Color.FromArgb(74, 128, 255), Color.FromArgb(39, 67, 135), // 32
+            Color.FromArgb(0, 153, 40), Color.FromArgb(0, 187, 50), Color.FromArgb(0, 217, 58), Color.FromArgb(0, 114, 30), // 33
+            Color.FromArgb(91, 60, 34), Color.FromArgb(111, 74, 42), Color.FromArgb(129, 86, 49), Color.FromArgb(68, 45, 25), // 34
+            Color.FromArgb(79, 1, 0), Color.FromArgb(96, 1, 0), Color.FromArgb(112, 2, 0), Color.FromArgb(59, 1, 0), // 35
+            Color.FromArgb(147, 124, 113), Color.FromArgb(180, 152, 138), Color.FromArgb(209, 177, 161), Color.FromArgb(110, 93, 85), // 36
+            Color.FromArgb(112, 57, 25), Color.FromArgb(137, 70, 31), Color.FromArgb(159, 82, 36), Color.FromArgb(84, 43, 19), // 37
+            Color.FromArgb(105, 61, 76), Color.FromArgb(128, 75, 93), Color.FromArgb(149, 87, 108), Color.FromArgb(78, 46, 57), // 38
+            Color.FromArgb(79, 76, 97), Color.FromArgb(96, 93, 119), Color.FromArgb(112, 108, 138), Color.FromArgb(59, 57, 73), // 39
+            Color.FromArgb(131, 93, 25), Color.FromArgb(160, 114, 31), Color.FromArgb(186, 133, 36), Color.FromArgb(98, 70, 19), // 40
+            Color.FromArgb(72, 82, 37), Color.FromArgb(88, 100, 45), Color.FromArgb(103, 117, 53), Color.FromArgb(54, 61, 28), // 41
+            Color.FromArgb(112, 54, 55), Color.FromArgb(138, 66, 67), Color.FromArgb(160, 77, 78), Color.FromArgb(84, 40, 41), // 42
+            Color.FromArgb(40, 28, 24), Color.FromArgb(49, 35, 30), Color.FromArgb(57, 41, 35), Color.FromArgb(30, 21, 18), // 43
+            Color.FromArgb(95, 75, 69), Color.FromArgb(116, 92, 84), Color.FromArgb(135, 107, 98), Color.FromArgb(71, 56, 51), // 44
+            Color.FromArgb(61, 64, 64), Color.FromArgb(75, 79, 79), Color.FromArgb(87, 92, 92), Color.FromArgb(46, 48, 48), // 45
+            Color.FromArgb(86, 51, 62), Color.FromArgb(105, 62, 75), Color.FromArgb(122, 73, 88), Color.FromArgb(64, 38, 46), // 46
+            Color.FromArgb(53, 43, 64), Color.FromArgb(65, 53, 79), Color.FromArgb(76, 62, 92), Color.FromArgb(40, 32, 48), // 47
+            Color.FromArgb(53, 35, 24), Color.FromArgb(65, 43, 30), Color.FromArgb(76, 50, 35), Color.FromArgb(40, 26, 18), // 48
+            Color.FromArgb(53, 57, 29), Color.FromArgb(65, 70, 36), Color.FromArgb(76, 82, 42), Color.FromArgb(40, 43, 22), // 49
+            Color.FromArgb(100, 42, 32), Color.FromArgb(122, 51, 39), Color.FromArgb(142, 60, 46), Color.FromArgb(75, 31, 24), // 50
+            Color.FromArgb(26, 15, 11), Color.FromArgb(31, 18, 13), Color.FromArgb(37, 22, 16), Color.FromArgb(19, 11, 8), // 51
+            Color.FromArgb(133, 33, 34), Color.FromArgb(163, 41, 42), Color.FromArgb(189, 48, 49), Color.FromArgb(100, 25, 25), // 52
+            Color.FromArgb(104, 44, 68), Color.FromArgb(127, 54, 83), Color.FromArgb(148, 63, 97), Color.FromArgb(78, 33, 51), // 53
+            Color.FromArgb(64, 17, 20), Color.FromArgb(79, 21, 25), Color.FromArgb(92, 25, 29), Color.FromArgb(48, 13, 15), // 54
+            Color.FromArgb(15, 88, 94), Color.FromArgb(18, 108, 115), Color.FromArgb(22, 126, 134), Color.FromArgb(11, 66, 70), // 55
+            Color.FromArgb(40, 100, 98), Color.FromArgb(50, 122, 120), Color.FromArgb(58, 142, 140), Color.FromArgb(30, 75, 74), // 56
+            Color.FromArgb(60, 31, 43), Color.FromArgb(74, 37, 53), Color.FromArgb(86, 44, 62), Color.FromArgb(45, 23, 32), // 57
+            Color.FromArgb(14, 127, 93), Color.FromArgb(17, 155, 114), Color.FromArgb(20, 180, 133), Color.FromArgb(10, 95, 70), // 58
+            Color.FromArgb(70, 70, 70), Color.FromArgb(86, 86, 86), Color.FromArgb(100, 100, 100), Color.FromArgb(52, 52, 52), // 59
+            Color.FromArgb(152, 123, 59), Color.FromArgb(186, 150, 126), Color.FromArgb(216, 175, 147), Color.FromArgb(114, 92, 77), // 60
+            Color.FromArgb(89, 117, 105), Color.FromArgb(109, 144, 129), Color.FromArgb(127, 167, 150), Color.FromArgb(67, 88, 79), // 61
+            Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255),
+            Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255)
         };
 
         private void BrushSize_Click(object sender, EventArgs e)
         {
-            string s = Interaction.InputBox("Brush Size", "Map Editor", brushSize + "");
+            string s = Interaction.InputBox("Brush Size", "Map Editor", brushSize.ToString());
             if (s != "")
                 brushSize = int.Parse(s);
         }
@@ -292,9 +100,9 @@ namespace MinecraftMapEditor
         private void Build_Click(object sender, EventArgs e)
         {
             string s = "";
-            for (byte y = 0; y < 0x80; y++)
+            for (byte y = 0; y < 0x80; ++y)
             {
-                for (byte x = 0; x < 0x80; x++)
+                for (byte x = 0; x < 0x80; ++x)
                 {
                     s += colors[x, y] < 0x80 ? colors[x, y] : colors[x, y] - 0x100;
                     if ((x + 1) % 0x10 > 0)
@@ -325,8 +133,8 @@ namespace MinecraftMapEditor
             {
                 byte c = colors[(byte)((float)e.X / picCanvas.ClientRectangle.Width * 0x80),
                     (byte)((float)e.Y / picCanvas.ClientRectangle.Height * 0x80)];
-                for (byte y = 0; y < 0x80; y++)
-                    for (byte x = 0; x < 0x80; x++)
+                for (byte y = 0; y < 0x80; ++y)
+                    for (byte x = 0; x < 0x80; ++x)
                     {
                         if (colors[x, y] == c)
                         {
@@ -359,7 +167,7 @@ namespace MinecraftMapEditor
                         {
                             if (by >= 0x80)
                                 break;
-                            for (byte bx = left; bx < left + brushSize * resolution; bx++)
+                            for (byte bx = left; bx < left + brushSize * resolution; ++bx)
                             {
                                 if (bx >= 0x80)
                                     break;
@@ -374,11 +182,11 @@ namespace MinecraftMapEditor
                         switch (e.Button)
                         {
                             case MouseButtons.Left:
-                                lblColorLeft.Text = color + "";
+                                lblColorLeft.Text = color.ToString();
                                 lblColorLeft.BackColor = colorTable[color];
                                 break;
                             case MouseButtons.Right:
-                                lblColorRight.Text = color + "";
+                                lblColorRight.Text = color.ToString();
                                 lblColorRight.BackColor = colorTable[color];
                                 break;
                         }
@@ -394,7 +202,7 @@ namespace MinecraftMapEditor
 
         private void CellGrid_Click(object sender, EventArgs e)
         {
-            string s = Interaction.InputBox("Cell size", "Cell grid", cellSize + "");
+            string s = Interaction.InputBox("Cell size", "Cell grid", cellSize.ToString());
             if (s != "")
             {
                 cellSize = byte.Parse(s);
@@ -437,9 +245,9 @@ namespace MinecraftMapEditor
         public MapEditor()
         {
             InitializeComponent();
-            for (int i = 0; i < colorTable.Length; i++)
+            for (int i = 0; i < colorTable.Length; ++i)
             {
-                ListViewItem lvi = new ListViewItem(i + "")
+                ListViewItem lvi = new ListViewItem(i.ToString())
                 {
                     BackColor = colorTable[i]
                 };
@@ -456,8 +264,8 @@ namespace MinecraftMapEditor
             {
                 s = Clipboard.GetText();
                 byte[][] colors = Regex.Matches(s + "\r\n", "(([0-9-]+  ){15}[0-9-]+\\r\\n){8}").Cast<Match>().Select(m1 => Regex.Matches(m1.Value, "[0-9-]+").Cast<Match>().Select(m2 => m2.Value[0] == '-' ? (byte)(0x100 + short.Parse(m2.Value)) : byte.Parse(m2.Value)).ToArray()).ToArray();
-                for (byte y = 0; y < 0x80; y++)
-                    for (byte x = 0; x < 0x80; x++)
+                for (byte y = 0; y < 0x80; ++y)
+                    for (byte x = 0; x < 0x80; ++x)
                         this.colors[x, y] = colors[y][x];
                 RedrawMap();
             }
@@ -484,7 +292,7 @@ namespace MinecraftMapEditor
         private void RedrawChunkGrid_Click(object sender, EventArgs e)
         {
             pen.Color = Color.Black;
-            for (byte b = 0; b < 0x10; b++)
+            for (byte b = 0; b < 0x10; ++b)
             {
                 graphics.DrawLine(pen, new PointF(size * 0x10 * b, 0), new PointF(size * 0x10 * b, picCanvas.ClientRectangle.Height));
                 graphics.DrawLine(pen, new PointF(0, size * 0x10 * b), new PointF(picCanvas.ClientRectangle.Width, size * 0x10 * b));
@@ -494,7 +302,7 @@ namespace MinecraftMapEditor
         private void RedrawGrid_Click(object sender, EventArgs e)
         {
             pen.Color = Color.Gray;
-            for (byte b = 0; b < 0x80 / resolution; b++)
+            for (byte b = 0; b < 0x80 / resolution; ++b)
             {
                 graphics.DrawLine(pen, new PointF(size * resolution * b, 0), new PointF(size * resolution * b, picCanvas.ClientRectangle.Height));
                 graphics.DrawLine(pen, new PointF(0, size * resolution * b), new PointF(picCanvas.ClientRectangle.Width, size * resolution * b));
@@ -503,8 +311,8 @@ namespace MinecraftMapEditor
 
         void RedrawMap()
         {
-            for (byte y = 0; y < 0x80; y++)
-                for (byte x = 0; x < 0x80; x++)
+            for (byte y = 0; y < 0x80; ++y)
+                for (byte x = 0; x < 0x80; ++x)
                 {
                     graphics.FillRectangle(new SolidBrush(colorTable[colors[x, y]]), size * x, size * y, size, size);
                 }
@@ -548,7 +356,7 @@ namespace MinecraftMapEditor
             foreach (ToolStripMenuItem mi in miResolution.DropDownItems)
                 mi.Checked = false;
             ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
-            resolution = byte.Parse(menuItem.Tag + "");
+            resolution = byte.Parse(menuItem.Tag.ToString());
             menuItem.Checked = true;
         }
 
