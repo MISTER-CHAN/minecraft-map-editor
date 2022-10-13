@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.lvColorPicker = new System.Windows.Forms.ListView();
-            this.picCanvas = new System.Windows.Forms.PictureBox();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.miNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,6 +55,7 @@
             this.miResolution64 = new System.Windows.Forms.ToolStripMenuItem();
             this.miResolution128 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.miUsage = new System.Windows.Forms.ToolStripMenuItem();
             this.miCredits = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlColorViewer = new System.Windows.Forms.Panel();
             this.lblColorRight = new System.Windows.Forms.Label();
@@ -65,8 +66,7 @@
             this.rbEyedropper = new System.Windows.Forms.RadioButton();
             this.rbBucket = new System.Windows.Forms.RadioButton();
             this.rbBrush = new System.Windows.Forms.RadioButton();
-            this.miUsage = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.picCanvas)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.pnlColorViewer.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -86,19 +86,19 @@
             this.lvColorPicker.SelectedIndexChanged += new System.EventHandler(this.ColorPicker_SelectedIndexChanged);
             this.lvColorPicker.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ColorPicker_MouseClick);
             // 
-            // picCanvas
+            // pictureBox
             // 
-            this.picCanvas.BackColor = System.Drawing.Color.White;
-            this.picCanvas.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.picCanvas.Location = new System.Drawing.Point(3, 36);
-            this.picCanvas.Margin = new System.Windows.Forms.Padding(4);
-            this.picCanvas.Name = "picCanvas";
-            this.picCanvas.Size = new System.Drawing.Size(148, 66);
-            this.picCanvas.TabIndex = 5;
-            this.picCanvas.TabStop = false;
-            this.picCanvas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Canvas_MouseDown);
-            this.picCanvas.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Canvas_MouseMove);
-            this.picCanvas.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Canvas_MouseUp);
+            this.pictureBox.BackColor = System.Drawing.Color.White;
+            this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox.Location = new System.Drawing.Point(3, 36);
+            this.pictureBox.Margin = new System.Windows.Forms.Padding(4);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(148, 66);
+            this.pictureBox.TabIndex = 5;
+            this.pictureBox.TabStop = false;
+            this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PictureBox_MouseDown);
+            this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBox_MouseMove);
+            this.pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PictureBox_MouseUp);
             // 
             // menuStrip
             // 
@@ -142,8 +142,8 @@
             // 
             this.miBuild.Name = "miBuild";
             this.miBuild.Size = new System.Drawing.Size(132, 26);
-            this.miBuild.Text = "Build";
-            this.miBuild.Click += new System.EventHandler(this.Build_Click);
+            this.miBuild.Text = "Save";
+            this.miBuild.Click += new System.EventHandler(this.Save_Click);
             // 
             // mnuEdit
             // 
@@ -314,10 +314,17 @@
             this.mnuHelp.Size = new System.Drawing.Size(58, 24);
             this.mnuHelp.Text = "Help";
             // 
+            // miUsage
+            // 
+            this.miUsage.Name = "miUsage";
+            this.miUsage.Size = new System.Drawing.Size(138, 26);
+            this.miUsage.Text = "Help";
+            this.miUsage.Click += new System.EventHandler(this.Usage_Click);
+            // 
             // miCredits
             // 
             this.miCredits.Name = "miCredits";
-            this.miCredits.Size = new System.Drawing.Size(224, 26);
+            this.miCredits.Size = new System.Drawing.Size(138, 26);
             this.miCredits.Text = "About";
             this.miCredits.Click += new System.EventHandler(this.Credits_Click);
             // 
@@ -387,7 +394,7 @@
             this.rbEyedropper.AutoSize = true;
             this.rbEyedropper.Location = new System.Drawing.Point(0, 52);
             this.rbEyedropper.Name = "rbEyedropper";
-            this.rbEyedropper.Size = new System.Drawing.Size(98, 26);
+            this.rbEyedropper.Size = new System.Drawing.Size(97, 26);
             this.rbEyedropper.TabIndex = 2;
             this.rbEyedropper.Text = "Eyedropper";
             this.rbEyedropper.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -417,13 +424,6 @@
             this.rbBrush.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rbBrush.UseVisualStyleBackColor = true;
             // 
-            // miUsage
-            // 
-            this.miUsage.Name = "miUsage";
-            this.miUsage.Size = new System.Drawing.Size(224, 26);
-            this.miUsage.Text = "Help";
-            this.miUsage.Click += new System.EventHandler(this.Usage_Click);
-            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
@@ -433,15 +433,16 @@
             this.Controls.Add(this.lvColorPicker);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.pnlColorViewer);
-            this.Controls.Add(this.picCanvas);
+            this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.menuStrip);
             this.Font = new System.Drawing.Font("MISTER_CHAN", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.MainMenuStrip = this.menuStrip;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MapEditor";
             this.Text = "Map Editor";
+            this.ResizeEnd += new System.EventHandler(this.MapEditor_ResizeEnd);
             this.Resize += new System.EventHandler(this.MapEditor_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.picCanvas)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.pnlColorViewer.ResumeLayout(false);
@@ -456,7 +457,7 @@
 
         #endregion
         private System.Windows.Forms.ListView lvColorPicker;
-        private System.Windows.Forms.PictureBox picCanvas;
+        private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem mnuFile;
         private System.Windows.Forms.ToolStripMenuItem mnuView;
