@@ -2,6 +2,7 @@
 using Substrate.Core;
 using Substrate.Nbt;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -11,18 +12,20 @@ namespace MinecraftMapEditor
 {
     public partial class MapEditor : Form
     {
-        private Bitmap bitmap;
-        private bool isPainting = false;
-        private Brush brush = new SolidBrush(Color.White);
-        private byte cellSize = 0, resolution = 1, selColor = 0;
-        private byte[] colors = new byte[0x4000];
-        private float scale;
-        private Graphics graphics;
-        private int brushSize = 1;
-        private NBTFile file;
-        private NbtTree tree;
-        private readonly Pen pen = new Pen(Color.Black);
-        private TagNodeList banners = new TagNodeList(TagType.TAG_COMPOUND);
+        private Bitmap _bitmap;
+        private bool _isPainting = false;
+        private Brush _brush = new SolidBrush(Color.White);
+        private byte _cellSize = 0, _resolution = 1, _selColor = 0;
+        private byte[] _colors = new byte[0x4000];
+        private float _scale;
+        private Graphics _graphics;
+        private int _brushSize = 1;
+        private int _xCenter, _zCenter;
+        private Dictionary<Point, Banner> _bannerDict = new();
+        private NBTFile _file;
+        private NbtTree _tree;
+        private readonly Pen _pen = new(Color.Black);
+        private TagNodeList _banners = new(TagType.TAG_COMPOUND);
 
         private readonly Color[] colorTable = new Color[0x100]
         {
@@ -95,63 +98,68 @@ namespace MinecraftMapEditor
         public MapEditor()
         {
             InitializeComponent();
+
             for (int i = 0; i < colorTable.Length; ++i)
             {
-                ListViewItem lvi = new ListViewItem(i.ToString())
+                ListViewItem lvi = new(i.ToString())
                 {
                     BackColor = colorTable[i]
                 };
-                lvColorPicker.Items.Add(lvi);
+                _lstColorPicker.Items.Add(lvi);
             }
-            lvColorPicker.Items[0].Selected = true;
+            _lstColorPicker.Items[0].Selected = true;
 
             ResizeForm();
 
-            bitmap = new Bitmap(pictureBox.ClientRectangle.Width, pictureBox.ClientRectangle.Height);
-            graphics = Graphics.FromImage(bitmap);
-            graphics.Clear(Color.White);
-            pictureBox.Image = bitmap;
+            _bitmap = new Bitmap(_pictureBox.ClientRectangle.Width, _pictureBox.ClientRectangle.Height);
+            _graphics = Graphics.FromImage(_bitmap);
+            _graphics.Clear(Color.White);
+            _pictureBox.Image = _bitmap;
 
             RedrawGrids();
+
+            _rdoBrush_CheckedChanged(_rdoBrush, null);
         }
 
-        private void BrushSize_Click(object sender, EventArgs e)
+        private void _itmBrushSize_Click(object sender, EventArgs e)
         {
-            string s = Interaction.InputBox("Brush Size", "Map Editor", brushSize.ToString());
+            string s = Interaction.InputBox("Brush Size", "Map Editor", _brushSize.ToString());
             if (s != "")
-                brushSize = int.Parse(s);
+                _brushSize = int.Parse(s);
         }
 
-        private void CellGrid_Click(object sender, EventArgs e)
+        private void _itmCellGrid_Click(object sender, EventArgs e)
         {
-            string s = Interaction.InputBox("Cell size", "Cell grid", cellSize.ToString());
+            string s = Interaction.InputBox("Cell size", "Cell grid", _cellSize.ToString());
             if (s != "")
             {
-                cellSize = byte.Parse(s);
+                _cellSize = byte.Parse(s);
                 RedrawCellGrid();
             }
         }
 
-        private void ColorPicker_MouseClick(object sender, MouseEventArgs e)
+        private void _itmOpen_Click(object sender, EventArgs e)
         {
-            if (lvColorPicker.SelectedItems.Count > 0)
-            {
-                switch (e.Button)
-                {
-                    case MouseButtons.Left:
-                        lblColorLeft.Text = lvColorPicker.SelectedItems[0].Text;
-                        lblColorLeft.BackColor = lvColorPicker.SelectedItems[0].BackColor;
-                        break;
-                    case MouseButtons.Right:
-                        lblColorRight.Text = lvColorPicker.SelectedItems[0].Text;
-                        lblColorRight.BackColor = lvColorPicker.SelectedItems[0].BackColor;
-                        break;
-                }
-            }
+            Open();
         }
 
-        private void ColorPicker_SelectedIndexChanged(object sender, EventArgs e)
+        private void _itmResolution_Click(object sender, EventArgs e)
         {
+            foreach (ToolStripMenuItem itm in _itmResolution.DropDownItems)
+                itm.Checked = false;
+            ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
+            _resolution = byte.Parse(menuItem.Tag.ToString());
+            menuItem.Checked = true;
+        }
+
+        private void _itmSave_Click(object sender, EventArgs e)
+        {
+            Save();
+        }
+
+        private void _itmUsage_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("See https://github.com/MISTER-CHAN/minecraft-map-editor", "Usage");
         }
 
         private void Credits_Click(object sender, EventArgs e)
@@ -161,40 +169,54 @@ namespace MinecraftMapEditor
 
         private int IndexOf(byte x, byte y) => x + y * 0x80;
 
+        private int IndexOf(int x, int z) => x + z * 0x80;
+
         private T Lookup<T>(TagNodeCompound compound, string key) where T : TagNode
         {
             if (compound == null)
                 return default;
 
-            for (int i = 0; i <= compound.Count; ++i)
+            for (int i = 0; i < compound.Count; ++i)
                 if (compound.Keys.ElementAt(i) == key)
                     return compound.Values.ElementAt(i) is T t ? t : default;
 
             return default;
         }
 
+        private void _lstColorPicker_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (_lstColorPicker.SelectedItems.Count > 0)
+            {
+                switch (e.Button)
+                {
+                    case MouseButtons.Left:
+                        _lblColorLeft.Text = _lstColorPicker.SelectedItems[0].Text;
+                        _lblColorLeft.BackColor = _lstColorPicker.SelectedItems[0].BackColor;
+                        break;
+                    case MouseButtons.Right:
+                        _lblColorRight.Text = _lstColorPicker.SelectedItems[0].Text;
+                        _lblColorRight.BackColor = _lstColorPicker.SelectedItems[0].BackColor;
+                        break;
+                }
+            }
+        }
+
         private void MapEditor_Resize(object sender, EventArgs e)
         {
             ResizeForm();
+            if (WindowState == FormWindowState.Maximized)
+                ResizeFormEnd();
+
         }
 
         private void MapEditor_ResizeEnd(object sender, EventArgs e)
         {
-            if (bitmap == null)
-                return;
+            ResizeFormEnd();
+        }
 
-            graphics.Flush();
-            graphics.Dispose();
-            Bitmap bm = new Bitmap(pictureBox.ClientRectangle.Width, pictureBox.ClientRectangle.Height);
-            graphics = Graphics.FromImage(bm);
-            graphics.DrawImage(bitmap,
-                new RectangleF(0.0f, 0.0f, bm.Width, bm.Height),
-                new RectangleF(0.0f, 0.0f, bitmap.Width, bitmap.Height),
-                GraphicsUnit.Pixel);
-            bitmap.Dispose();
-            bitmap = bm;
-            Redraw();
-            pictureBox.Image = bitmap;
+        private void MapEditor_SizeChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void Open()
@@ -203,127 +225,320 @@ namespace MinecraftMapEditor
             {
                 RestoreDirectory = true,
                 Filter = "NBT Files (*.dat)|*.dat",
-                Title = ""
+                Title = "Open"
             };
             if (ofd.ShowDialog() != DialogResult.OK)
                 return;
 
-            file = new NBTFile(ofd.FileName);
-            tree = new NbtTree();
-            tree.ReadFrom(file.GetDataInputStream(CompressionType.GZip));
+            _file = new NBTFile(ofd.FileName);
+            _tree = new NbtTree();
+            _tree.ReadFrom(_file.GetDataInputStream(CompressionType.GZip));
 
-            TagNodeCompound root = tree.Root;
+            TagNodeCompound root = _tree.Root;
             if (root == null) return;
+
             TagNodeCompound data = Lookup<TagNodeCompound>(root, "data");
             if (data == null) return;
+
             TagNodeByteArray colors = Lookup<TagNodeByteArray>(data, "colors");
             if (colors == null) return;
-            banners = Lookup<TagNodeList>(data, "banners");
-            if (banners == null)
+
+            TagNodeInt xCenter = Lookup<TagNodeInt>(data, "xCenter");
+            if (xCenter == null) return;
+            _xCenter = xCenter.Data;
+
+            TagNodeInt zCenter = Lookup<TagNodeInt>(data, "zCenter");
+            if (zCenter == null) return;
+            _zCenter = zCenter.Data;
+
+            TagNodeByte scale = Lookup<TagNodeByte>(data, "scale");
+            if (scale == null) return;
+            if (scale.Data == 0)
             {
-                banners = new TagNodeList(TagType.TAG_COMPOUND);
-                return;
+                _rdoBanner.Enabled = true;
+            }
+            else
+            {
+                _rdoBanner.Enabled = false;
+                MessageBox.Show("Banners cannot be edited while scale is 0.", "Open", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+
+            TagNodeByte locked = Lookup<TagNodeByte>(data, "locked");
+            if (locked == null) return;
+            if (locked != 1) locked.Data = 1;
+
+            _banners = scale.Data == 0 ? Lookup<TagNodeList>(data, "banners") : null;
+            if (_banners == null)
+            {
+                _banners = new TagNodeList(TagType.TAG_COMPOUND);
+                data.Add("banners", _banners);
+                _bannerDict = new();
+            }
+            else
+            {
+                _bannerDict = new();
+
+                foreach (TagNodeCompound banner in _banners)
+                {
+                    TagNodeCompound pos = Lookup<TagNodeCompound>(banner, "Pos");
+                    if (pos == null) continue;
+                    TagNodeInt x = Lookup<TagNodeInt>(pos, "X");
+                    if (x == null) continue;
+                    TagNodeInt z = Lookup<TagNodeInt>(pos, "Z");
+                    if (z == null) continue;
+                    TagNodeString color = Lookup<TagNodeString>(banner, "Color");
+                    if (color == null) continue;
+                    TagNodeString name = Lookup<TagNodeString>(banner, "Name");
+                    if (name == null) continue;
+
+                    _bannerDict.Add(new(x, z), new() { banner = banner, color = color, name = name });
+                }
             }
 
             if (colors.Length != 0x4000)
                 return;
 
-            this.colors = colors.Data;
+            _colors = colors.Data;
 
             Redraw();
         }
 
-        private void Open_Click(object sender, EventArgs e)
+        private void _pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            Open();
+            if (_brush != null)
+                _brush.Dispose();
         }
 
-        private void PictureBox_MouseDown(object sender, MouseEventArgs e)
+        private void _pictureBox_MouseDownWithBanner(object sender, MouseEventArgs e)
         {
-            if (brush != null)
-                brush.Dispose();
+            byte ux = ToUnscaled(e.X), uy = ToUnscaled(e.Y);
+            int x = ux + (_xCenter - 0x40), z = uy + (_zCenter - 0x40);
+            Point p = new(x, z);
+
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    selColor = byte.Parse(lblColorLeft.Text);
-                    break;
+                    {
+                        Banner banner;
+                        if (_bannerDict.TryGetValue(p, out banner))
+                        {
+                            _txtBannerName.Text = banner.name.Data;
+                            _lstBannerColor.SelectedItem = banner.color.Data;
+                        }
+                        else if (_lstBannerColor.SelectedItem != null)
+                        {
+                            TagNodeString color = new((string)_lstBannerColor.SelectedItem);
+                            TagNodeString name = new(_txtBannerName.Text);
+
+                            TagNodeCompound node = new()
+                            {
+                                { "Color", color },
+                                { "Name", name },
+                                { "Pos",
+                                    new TagNodeCompound()
+                                    {
+                                        { "X", new TagNodeInt(x) },
+                                        { "Y", new TagNodeInt(0) },
+                                        { "Z", new TagNodeInt(z) }
+                                    }
+                                }
+                            };
+
+                            _bannerDict.Add(p, new() { banner = node, color = color, name = name });
+                            _banners.Add(node);
+
+                            DrawBanner(ux, uy);
+                            _pictureBox.Invalidate();
+                        }
+                        break;
+                    }
                 case MouseButtons.Right:
-                    selColor = byte.Parse(lblColorRight.Text);
+                    {
+                        Banner banner;
+                        if (_bannerDict.TryGetValue(p, out banner))
+                        {
+                            _bannerDict.Remove(p);
+                            _banners.Remove(banner.banner);
+
+                            _graphics.FillRectangle(new SolidBrush(colorTable[_colors[IndexOf(ux, uy)]]), _scale * ux, _scale * uy, _scale, _scale);
+                            RedrawGrids();
+                        }
+                        break;
+                    }
+
+            }
+        }
+
+        private void _pictureBox_MouseDownWithBrush(object sender, MouseEventArgs e)
+        {
+            _isPainting = true;
+
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    _selColor = byte.Parse(_lblColorLeft.Text);
+                    break;
+
+                case MouseButtons.Right:
+                    _selColor = byte.Parse(_lblColorRight.Text);
                     break;
             }
-            brush = new SolidBrush(colorTable[selColor]);
-            if (rbBucket.Checked)
+
+            _brush = new SolidBrush(colorTable[_selColor]);
+
+            _pictureBox_MouseMoveWithBrush(sender, e);
+        }
+
+        private void _pictureBox_MouseDownWithBucket(object sender, MouseEventArgs e)
+        {
+
+            switch (e.Button)
             {
-                byte c = colors[(byte)((float)e.X / pictureBox.ClientRectangle.Width * 0x80)
-                    + (byte)((float)e.Y / pictureBox.ClientRectangle.Height * 0x80)];
-                for (byte y = 0; y < 0x80; ++y)
-                    for (byte x = 0; x < 0x80; ++x)
+                case MouseButtons.Left:
+                    _selColor = byte.Parse(_lblColorLeft.Text);
+                    break;
+
+                case MouseButtons.Right:
+                    _selColor = byte.Parse(_lblColorRight.Text);
+                    break;
+            }
+
+            _brush = new SolidBrush(colorTable[_selColor]);
+
+            byte color = _colors[ToUnscaled(e.X) + ToUnscaled(e.Y)];
+
+            for (byte y = 0; y < 0x80; ++y)
+            {
+                for (byte x = 0; x < 0x80; ++x)
+                {
+                    if (_colors[IndexOf(x, y)] == color)
                     {
-                        if (colors[IndexOf(x, y)] == c)
-                        {
-                            colors[IndexOf(x, y)] = selColor;
-                            graphics.FillRectangle(brush, new RectangleF(x * scale, y * scale, scale, scale));
-                        }
+                        _colors[IndexOf(x, y)] = _selColor;
+                        _graphics.FillRectangle(_brush, new RectangleF(x * _scale, y * _scale, _scale, _scale));
                     }
+                }
+            }
+        }
+
+        private void _pictureBox_MouseDownWithEyedropper(object sender, MouseEventArgs e)
+        {
+            _isPainting = true;
+            _pictureBox_MouseMoveWithEyedropper(sender, e);
+        }
+
+        private void _pictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            byte x = ToUnscaled(e.X), y = ToUnscaled(e.Y);
+            _lblPos.Text = $"({x - 0x40}, {y - 0x40})";
+
+        }
+
+        private void _pictureBox_MouseMoveWithBrush(object sender, MouseEventArgs e)
+        {
+            if (!_isPainting)
+                return;
+
+            if (!(0 <= e.X && e.X < _bitmap.Width && 0 <= e.Y && e.Y < _bitmap.Height))
+                return;
+
+            byte x = ToUnscaled(e.X), y = ToUnscaled(e.Y);
+
+            byte left = (byte)Math.Max(0, (x / _resolution - (_brushSize >> 1)) * _resolution),
+                top = (byte)Math.Max(0, (y / _resolution - (_brushSize >> 1)) * _resolution),
+                right = (byte)Math.Min(top + _brushSize * _resolution, 0x80),
+                bottom = (byte)Math.Min(left + _brushSize * _resolution, 0x80);
+
+            for (byte by = top; by < right; ++by)
+                for (byte bx = left; bx < bottom; ++bx)
+                    _colors[IndexOf(bx, by)] = _selColor;
+
+            _graphics.FillRectangle(_brush, new RectangleF(left * _scale, top * _scale, _brushSize * _scale * _resolution, _brushSize * _scale * _resolution));
+
+            RedrawGrids();
+        }
+
+        private void _pictureBox_MouseMoveWithEyedropper(object sender, MouseEventArgs e)
+        {
+            if (!_isPainting)
+                return;
+
+            if (!(0 <= e.X && e.X < _bitmap.Width && 0 <= e.Y && e.Y < _bitmap.Height))
+                return;
+
+            byte x = ToUnscaled(e.X), y = ToUnscaled(e.Y);
+
+            byte color = _colors[IndexOf(x, y)];
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    _lblColorLeft.Text = color.ToString();
+                    _lblColorLeft.BackColor = colorTable[color];
+                    break;
+
+                case MouseButtons.Right:
+                    _lblColorRight.Text = color.ToString();
+                    _lblColorRight.BackColor = colorTable[color];
+                    break;
+            }
+        }
+
+        private void _pictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            _isPainting = false;
+        }
+
+        private void _rdoBanner_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((RadioButton)sender).Checked)
+            {
+                _pnlBanners.BringToFront();
+                _pictureBox.MouseDown += _pictureBox_MouseDownWithBanner;
             }
             else
             {
-                isPainting = true;
-                PictureBox_MouseMove(sender, e);
+                _pnlBanners.SendToBack();
+                _pictureBox.MouseDown -= _pictureBox_MouseDownWithBanner;
             }
         }
 
-        private void PictureBox_MouseMove(object sender, MouseEventArgs e)
+        private void _rdoBrush_CheckedChanged(object sender, EventArgs e)
         {
-            byte x = ToUnscaled(e.X), y = ToUnscaled(e.Y);
-            lblPos.Text = $"({x - 0x40}, {y - 0x40})";
-
-            if (!(isPainting && !rbBucket.Checked))
-                return;
-
-            if (!(0 <= e.X && e.X < bitmap.Width && 0 <= e.Y && e.Y < bitmap.Height))
-                return;
-
-            if (rbBrush.Checked)
+            if (((RadioButton)sender).Checked)
             {
-                byte left = (byte)((byte)(x / resolution - brushSize / 2) * resolution),
-                    top = (byte)((byte)(y / resolution - brushSize / 2) * resolution);
-                for (byte by = top; by < top + brushSize * resolution; by++)
-                {
-                    if (by >= 0x80)
-                        break;
-                    for (byte bx = left; bx < left + brushSize * resolution; ++bx)
-                    {
-                        if (bx >= 0x80)
-                            break;
-                        colors[IndexOf(bx, by)] = selColor;
-                    }
-                }
-                graphics.FillRectangle(brush, new RectangleF(left * scale, top * scale, brushSize * scale * resolution, brushSize * scale * resolution));
-
-                RedrawGrids();
+                _pictureBox.MouseDown += _pictureBox_MouseDownWithBrush;
+                _pictureBox.MouseMove += _pictureBox_MouseMoveWithBrush;
             }
-            else if (rbEyedropper.Checked)
+            else
             {
-                byte color = colors[IndexOf(x, y)];
-                switch (e.Button)
-                {
-                    case MouseButtons.Left:
-                        lblColorLeft.Text = color.ToString();
-                        lblColorLeft.BackColor = colorTable[color];
-                        break;
-                    case MouseButtons.Right:
-                        lblColorRight.Text = color.ToString();
-                        lblColorRight.BackColor = colorTable[color];
-                        break;
-                }
+                _pictureBox.MouseDown -= _pictureBox_MouseDownWithBrush;
+                _pictureBox.MouseMove -= _pictureBox_MouseMoveWithBrush;
             }
-
         }
 
-        private void PictureBox_MouseUp(object sender, MouseEventArgs e)
+        private void _rdoBucket_CheckedChanged(object sender, EventArgs e)
         {
-            isPainting = false;
+            if (((RadioButton)sender).Checked)
+            {
+                _pictureBox.MouseDown += _pictureBox_MouseDownWithBucket;
+            }
+            else
+            {
+                _pictureBox.MouseDown -= _pictureBox_MouseDownWithBucket;
+            }
+        }
+
+        private void _rdoEyedropper_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((RadioButton)sender).Checked)
+            {
+                _pictureBox.MouseDown += _pictureBox_MouseDownWithEyedropper;
+                _pictureBox.MouseMove += _pictureBox_MouseMoveWithEyedropper;
+            }
+            else
+            {
+                _pictureBox.MouseDown -= _pictureBox_MouseDownWithEyedropper;
+                _pictureBox.MouseMove -= _pictureBox_MouseMoveWithEyedropper;
+            }
         }
 
         private void Redraw()
@@ -332,60 +547,62 @@ namespace MinecraftMapEditor
             RedrawGrid();
             RedrawChunkGrid();
             RedrawCellGrid();
+            RedrawBanners();
+        }
+
+        private void DrawBanner(byte x, byte y)
+        {
+            _pen.Color = Color.Red;
+
+            _graphics.DrawLine(_pen, ToScaled(x), ToScaled(y), ToScaled((byte)(x + 1)), ToScaled((byte)(y + 1)));
+            _graphics.DrawLine(_pen, ToScaled((byte)(x + 1)), ToScaled(y), ToScaled(x), ToScaled((byte)(y + 1)));
+        }
+
+        private void RedrawBanners()
+        {
+            foreach (KeyValuePair<Point, Banner> banner in _bannerDict)
+                DrawBanner((byte)(banner.Key.X - (_xCenter - 0x40)), (byte)(banner.Key.Y - (_zCenter - 0x40)));
+
+            _pictureBox.Invalidate();
         }
 
         private void RedrawCellGrid()
         {
-            if (cellSize <= 0)
+            if (_cellSize <= 0)
                 return;
 
-            pen.Color = Color.Red;
-            for (int i = 0; i < 0x80; i += cellSize * resolution)
+            _pen.Color = Color.Red;
+            for (int i = 0; i < 0x80; i += _cellSize * _resolution)
             {
-                graphics.DrawLine(pen, new PointF(scale * i, 0), new PointF(scale * i, bitmap.Height));
-                graphics.DrawLine(pen, new PointF(0, scale * i), new PointF(bitmap.Width, scale * i));
+                _graphics.DrawLine(_pen, new PointF(_scale * i, 0), new PointF(_scale * i, _bitmap.Height));
+                _graphics.DrawLine(_pen, new PointF(0, _scale * i), new PointF(_bitmap.Width, _scale * i));
             }
 
-            pictureBox.Invalidate();
-        }
-
-        private void RedrawCellGrid_Click(object sender, EventArgs e)
-        {
-            RedrawCellGrid();
+            _pictureBox.Invalidate();
         }
 
         private void RedrawChunkGrid()
         {
-            pen.Color = Color.Black;
+            _pen.Color = Color.Black;
             for (byte b = 0; b < 0x10; ++b)
             {
-                graphics.DrawLine(pen, new PointF(scale * 0x10 * b, 0), new PointF(scale * 0x10 * b, bitmap.Height));
-                graphics.DrawLine(pen, new PointF(0, scale * 0x10 * b), new PointF(bitmap.Width, scale * 0x10 * b));
+                _graphics.DrawLine(_pen, new PointF(_scale * 0x10 * b, 0), new PointF(_scale * 0x10 * b, _bitmap.Height));
+                _graphics.DrawLine(_pen, new PointF(0, _scale * 0x10 * b), new PointF(_bitmap.Width, _scale * 0x10 * b));
             }
 
-            pictureBox.Invalidate();
-        }
-
-        private void RedrawChunkGrid_Click(object sender, EventArgs e)
-        {
-            RedrawChunkGrid();
+            _pictureBox.Invalidate();
         }
 
         private void RedrawGrid()
         {
-            pen.Color = Color.Gray;
-            for (byte b = 0; b < 0x80 / resolution; ++b)
+            _pen.Color = Color.Gray;
+            for (byte b = 0; b < 0x80 / _resolution; ++b)
             {
-                graphics.DrawLine(pen, new PointF(scale * resolution * b, 0), new PointF(scale * resolution * b, bitmap.Height));
-                graphics.DrawLine(pen, new PointF(0, scale * resolution * b), new PointF(bitmap.Width, scale * resolution * b));
+                _graphics.DrawLine(_pen, new PointF(_scale * _resolution * b, 0), new PointF(_scale * _resolution * b, _bitmap.Height));
+                _graphics.DrawLine(_pen, new PointF(0, _scale * _resolution * b), new PointF(_bitmap.Width, _scale * _resolution * b));
             }
 
-            pictureBox.Invalidate();
-        }
-
-        private void RedrawGrid_Click(object sender, EventArgs e)
-        {
-            RedrawGrid();
+            _pictureBox.Invalidate();
         }
 
         private void RedrawGrids()
@@ -393,75 +610,80 @@ namespace MinecraftMapEditor
             RedrawGrid();
             RedrawChunkGrid();
             RedrawCellGrid();
+            RedrawBanners();
         }
 
         void RedrawMap()
         {
             for (byte y = 0; y < 0x80; ++y)
                 for (byte x = 0; x < 0x80; ++x)
-                    graphics.FillRectangle(new SolidBrush(colorTable[colors[IndexOf(x, y)]]), scale * x, scale * y, scale, scale);
+                    _graphics.FillRectangle(new SolidBrush(colorTable[_colors[IndexOf(x, y)]]), _scale * x, _scale * y, _scale, _scale);
 
-            pictureBox.Invalidate();
-        }
-
-        private void RedrawMap_Click(object sender, EventArgs e)
-        {
-            RedrawMap();
+            _pictureBox.Invalidate();
         }
 
         void ResizeForm()
         {
-            int height = ClientRectangle.Height - menuStrip.Height - statusStrip.Height;
-            rbBrush.Size = rbEyedropper.Size;
-            rbBucket.Size = rbEyedropper.Size;
-            rbBucket.Top = rbBrush.Height;
-            rbEyedropper.Top = rbBucket.Top + rbBucket.Height;
-            pnlTools.Size = new Size(rbEyedropper.Width, rbEyedropper.Top + rbEyedropper.Height);
-            pnlTools.Top = menuStrip.Height;
-            pictureBox.Size = new Size(height, height);
-            pictureBox.Location = new Point(pnlTools.Width, menuStrip.Height);
-            scale = (float)pictureBox.ClientRectangle.Height / 0x80;
-            pnlColorViewer.Location = new Point(pictureBox.Left + pictureBox.Width, menuStrip.Height);
-            pnlColorViewer.Width = ClientRectangle.Width - pictureBox.Left - pictureBox.Width;
-            lblColorLeft.Width = pnlColorViewer.Width / 2;
-            lblColorRight.Width = pnlColorViewer.Width / 2;
-            lblColorRight.Left = pnlColorViewer.Width / 2;
-            lvColorPicker.Location = new Point(pictureBox.Left + pictureBox.Width, menuStrip.Height + pnlColorViewer.Height);
-            lvColorPicker.Size = new Size(pnlColorViewer.Width, height - pnlColorViewer.Height);
+            int height = ClientRectangle.Height - _menuStrip.Height - _statusStrip.Height;
+            _rdoBrush.Size = _rdoEyedropper.Size;
+            _rdoBucket.Size = _rdoEyedropper.Size;
+            _rdoBanner.Size = _rdoEyedropper.Size;
+            _rdoBucket.Top = _rdoBrush.Height;
+            _rdoEyedropper.Top = _rdoBucket.Top + _rdoBucket.Height;
+            _rdoBanner.Top = _rdoEyedropper.Top + _rdoEyedropper.Height;
+            _pnlTools.Size = new(_rdoEyedropper.Width, height);
+            _pnlTools.Top = _menuStrip.Height;
+            _pictureBox.Size = new(height, height);
+            _pictureBox.Location = new(_pnlTools.Width, _menuStrip.Height);
+            _scale = (float)_pictureBox.ClientRectangle.Height / 0x80;
+            _pnlColor.Location = new(_pictureBox.Left + _pictureBox.Width, _menuStrip.Height);
+            _pnlColor.Size = new(ClientRectangle.Width - _pictureBox.Left - _pictureBox.Width, height);
+            _pnlColorViewer.Width = _pnlColor.Width;
+            _lblColorLeft.Width = _pnlColorViewer.Width >> 1;
+            _lblColorRight.Width = _pnlColorViewer.Width >> 1;
+            _lblColorRight.Left = _pnlColorViewer.Width >> 1;
+            _lstColorPicker.Size = new(_pnlColor.Width, height - _pnlColorViewer.Height);
+            _pnlBanners.Location = _pnlColor.Location;
+            _pnlBanners.Size = _pnlColor.Size;
+            _txtBannerName.Size = new(_pnlBanners.Width, height >> 1);
+            _lstBannerColor.Top = _txtBannerName.Height;
+            _lstBannerColor.Size = new(_pnlBanners.Width, height >> 1);
         }
 
-        private void Resolution_Click(object sender, EventArgs e)
+        private void ResizeFormEnd()
         {
-            foreach (ToolStripMenuItem mi in miResolution.DropDownItems)
-                mi.Checked = false;
-            ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
-            resolution = byte.Parse(menuItem.Tag.ToString());
-            menuItem.Checked = true;
+            if (_bitmap == null)
+                return;
+
+            _bitmap.Dispose();
+            _graphics.Flush();
+            _graphics.Dispose();
+            _bitmap = new Bitmap(_pictureBox.ClientRectangle.Width, _pictureBox.ClientRectangle.Height);
+            _graphics = Graphics.FromImage(_bitmap);
+            _pictureBox.Image = _bitmap;
+            Redraw();
         }
 
         private void Save()
         {
-            if (file == null)
+            if (_file == null)
                 return;
 
-            using (Stream str = file.GetDataOutputStream(CompressionType.GZip))
-                tree.WriteTo(str);
+            using (Stream str = _file.GetDataOutputStream(CompressionType.GZip))
+                _tree.WriteTo(str);
 
             MessageBox.Show("Done!", "Map Editor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void Save_Click(object sender, EventArgs e)
-        {
-            Save();
-        }
+        private float ToScaled(byte unscaled) => unscaled * _scale;
 
-        private float ToScaled(byte unscaled) => unscaled * scale;
+        private byte ToUnscaled(float scaled) => (byte)(scaled / _scale);
+    }
 
-        private byte ToUnscaled(float scaled) => (byte)(scaled / scale);
-
-        private void Usage_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("See https://github.com/MISTER-CHAN/minecraft-map-editor", "Usage");
-        }
+    class Banner
+    {
+        public TagNodeCompound banner;
+        public TagNodeString color;
+        public TagNodeString name;
     }
 }

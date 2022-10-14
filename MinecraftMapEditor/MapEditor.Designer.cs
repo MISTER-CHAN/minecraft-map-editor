@@ -28,472 +28,507 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lvColorPicker = new System.Windows.Forms.ListView();
-            this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.menuStrip = new System.Windows.Forms.MenuStrip();
-            this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.miNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.miOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.miBuild = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.miBrush = new System.Windows.Forms.ToolStripMenuItem();
-            this.miBrushSize = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
-            this.miRedraw = new System.Windows.Forms.ToolStripMenuItem();
-            this.miRedrawMap = new System.Windows.Forms.ToolStripMenuItem();
-            this.miRedrawGrid = new System.Windows.Forms.ToolStripMenuItem();
-            this.miRedrawCellGrid = new System.Windows.Forms.ToolStripMenuItem();
-            this.miRedrawChunkGrid = new System.Windows.Forms.ToolStripMenuItem();
-            this.miCellGrid = new System.Windows.Forms.ToolStripMenuItem();
-            this.miResolution = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuResolution1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.miResolution2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.miResolution4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.miResolution8 = new System.Windows.Forms.ToolStripMenuItem();
-            this.miResolution16 = new System.Windows.Forms.ToolStripMenuItem();
-            this.miResolution32 = new System.Windows.Forms.ToolStripMenuItem();
-            this.miResolution64 = new System.Windows.Forms.ToolStripMenuItem();
-            this.miResolution128 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
-            this.miUsage = new System.Windows.Forms.ToolStripMenuItem();
-            this.miCredits = new System.Windows.Forms.ToolStripMenuItem();
-            this.pnlColorViewer = new System.Windows.Forms.Panel();
-            this.lblColorRight = new System.Windows.Forms.Label();
-            this.lblColorLeft = new System.Windows.Forms.Label();
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.lblPos = new System.Windows.Forms.ToolStripStatusLabel();
-            this.pnlTools = new System.Windows.Forms.Panel();
-            this.rbEyedropper = new System.Windows.Forms.RadioButton();
-            this.rbBucket = new System.Windows.Forms.RadioButton();
-            this.rbBrush = new System.Windows.Forms.RadioButton();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
-            this.menuStrip.SuspendLayout();
-            this.pnlColorViewer.SuspendLayout();
-            this.statusStrip.SuspendLayout();
-            this.pnlTools.SuspendLayout();
+            this._lstColorPicker = new System.Windows.Forms.ListView();
+            this._pictureBox = new System.Windows.Forms.PictureBox();
+            this._menuStrip = new System.Windows.Forms.MenuStrip();
+            this._mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmNew = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmBuild = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmBrush = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmBrushSize = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuView = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmCellGrid = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmResolution = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuResolution1 = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmResolution2 = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmResolution4 = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmResolution8 = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmResolution16 = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmResolution32 = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmResolution64 = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmResolution128 = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmUsage = new System.Windows.Forms.ToolStripMenuItem();
+            this._itmCredits = new System.Windows.Forms.ToolStripMenuItem();
+            this._pnlColorViewer = new System.Windows.Forms.Panel();
+            this._lblColorRight = new System.Windows.Forms.Label();
+            this._lblColorLeft = new System.Windows.Forms.Label();
+            this._statusStrip = new System.Windows.Forms.StatusStrip();
+            this._lblPos = new System.Windows.Forms.ToolStripStatusLabel();
+            this._pnlTools = new System.Windows.Forms.Panel();
+            this._rdoBanner = new System.Windows.Forms.RadioButton();
+            this._rdoEyedropper = new System.Windows.Forms.RadioButton();
+            this._rdoBucket = new System.Windows.Forms.RadioButton();
+            this._rdoBrush = new System.Windows.Forms.RadioButton();
+            this._pnlBanners = new System.Windows.Forms.Panel();
+            this._lstBannerColor = new System.Windows.Forms.ListBox();
+            this._txtBannerName = new System.Windows.Forms.TextBox();
+            this._pnlColor = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this._pictureBox)).BeginInit();
+            this._menuStrip.SuspendLayout();
+            this._pnlColorViewer.SuspendLayout();
+            this._statusStrip.SuspendLayout();
+            this._pnlTools.SuspendLayout();
+            this._pnlBanners.SuspendLayout();
+            this._pnlColor.SuspendLayout();
             this.SuspendLayout();
             // 
-            // lvColorPicker
-            // 
-            this.lvColorPicker.HideSelection = false;
-            this.lvColorPicker.Location = new System.Drawing.Point(987, 389);
-            this.lvColorPicker.Margin = new System.Windows.Forms.Padding(4);
-            this.lvColorPicker.MultiSelect = false;
-            this.lvColorPicker.Name = "lvColorPicker";
-            this.lvColorPicker.Size = new System.Drawing.Size(170, 80);
-            this.lvColorPicker.TabIndex = 3;
-            this.lvColorPicker.UseCompatibleStateImageBehavior = false;
-            this.lvColorPicker.SelectedIndexChanged += new System.EventHandler(this.ColorPicker_SelectedIndexChanged);
-            this.lvColorPicker.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ColorPicker_MouseClick);
-            // 
-            // pictureBox
-            // 
-            this.pictureBox.BackColor = System.Drawing.Color.White;
-            this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pictureBox.Location = new System.Drawing.Point(3, 36);
-            this.pictureBox.Margin = new System.Windows.Forms.Padding(4);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(148, 66);
-            this.pictureBox.TabIndex = 5;
-            this.pictureBox.TabStop = false;
-            this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PictureBox_MouseDown);
-            this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBox_MouseMove);
-            this.pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PictureBox_MouseUp);
-            // 
-            // menuStrip
-            // 
-            this.menuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFile,
-            this.mnuEdit,
-            this.mnuView,
-            this.mnuHelp});
-            this.menuStrip.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Padding = new System.Windows.Forms.Padding(9, 2, 0, 2);
-            this.menuStrip.Size = new System.Drawing.Size(1200, 28);
-            this.menuStrip.TabIndex = 6;
-            this.menuStrip.Text = "menuStrip1";
-            // 
-            // mnuFile
-            // 
-            this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miNew,
-            this.miOpen,
-            this.miBuild});
-            this.mnuFile.Name = "mnuFile";
-            this.mnuFile.Size = new System.Drawing.Size(48, 24);
-            this.mnuFile.Text = "File";
-            // 
-            // miNew
-            // 
-            this.miNew.Name = "miNew";
-            this.miNew.Size = new System.Drawing.Size(132, 26);
-            this.miNew.Text = "New";
-            // 
-            // miOpen
-            // 
-            this.miOpen.Name = "miOpen";
-            this.miOpen.Size = new System.Drawing.Size(132, 26);
-            this.miOpen.Text = "Open";
-            this.miOpen.Click += new System.EventHandler(this.Open_Click);
-            // 
-            // miBuild
-            // 
-            this.miBuild.Name = "miBuild";
-            this.miBuild.Size = new System.Drawing.Size(132, 26);
-            this.miBuild.Text = "Save";
-            this.miBuild.Click += new System.EventHandler(this.Save_Click);
-            // 
-            // mnuEdit
-            // 
-            this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miBrush});
-            this.mnuEdit.Name = "mnuEdit";
-            this.mnuEdit.Size = new System.Drawing.Size(51, 24);
-            this.mnuEdit.Text = "Edit";
-            // 
-            // miBrush
-            // 
-            this.miBrush.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miBrushSize});
-            this.miBrush.Name = "miBrush";
-            this.miBrush.Size = new System.Drawing.Size(132, 26);
-            this.miBrush.Text = "Brush";
-            // 
-            // miBrushSize
-            // 
-            this.miBrushSize.Name = "miBrushSize";
-            this.miBrushSize.Size = new System.Drawing.Size(121, 26);
-            this.miBrushSize.Text = "Size";
-            this.miBrushSize.Click += new System.EventHandler(this.BrushSize_Click);
-            // 
-            // mnuView
-            // 
-            this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miRedraw,
-            this.miCellGrid,
-            this.miResolution});
-            this.mnuView.Name = "mnuView";
-            this.mnuView.Size = new System.Drawing.Size(58, 24);
-            this.mnuView.Text = "View";
-            // 
-            // miRedraw
-            // 
-            this.miRedraw.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miRedrawMap,
-            this.miRedrawGrid,
-            this.miRedrawCellGrid,
-            this.miRedrawChunkGrid});
-            this.miRedraw.Name = "miRedraw";
-            this.miRedraw.Size = new System.Drawing.Size(170, 26);
-            this.miRedraw.Text = "Redraw";
-            // 
-            // miRedrawMap
-            // 
-            this.miRedrawMap.Name = "miRedrawMap";
-            this.miRedrawMap.Size = new System.Drawing.Size(172, 26);
-            this.miRedrawMap.Text = "Map";
-            this.miRedrawMap.Click += new System.EventHandler(this.RedrawMap_Click);
-            // 
-            // miRedrawGrid
-            // 
-            this.miRedrawGrid.Name = "miRedrawGrid";
-            this.miRedrawGrid.Size = new System.Drawing.Size(172, 26);
-            this.miRedrawGrid.Text = "Grid";
-            this.miRedrawGrid.Click += new System.EventHandler(this.RedrawGrid_Click);
-            // 
-            // miRedrawCellGrid
-            // 
-            this.miRedrawCellGrid.Name = "miRedrawCellGrid";
-            this.miRedrawCellGrid.Size = new System.Drawing.Size(172, 26);
-            this.miRedrawCellGrid.Text = "Cell Grid";
-            this.miRedrawCellGrid.Click += new System.EventHandler(this.RedrawCellGrid_Click);
-            // 
-            // miRedrawChunkGrid
-            // 
-            this.miRedrawChunkGrid.Name = "miRedrawChunkGrid";
-            this.miRedrawChunkGrid.Size = new System.Drawing.Size(172, 26);
-            this.miRedrawChunkGrid.Text = "Chunk Grid";
-            this.miRedrawChunkGrid.Click += new System.EventHandler(this.RedrawChunkGrid_Click);
-            // 
-            // miCellGrid
-            // 
-            this.miCellGrid.Name = "miCellGrid";
-            this.miCellGrid.Size = new System.Drawing.Size(170, 26);
-            this.miCellGrid.Text = "Cell Grid";
-            this.miCellGrid.Click += new System.EventHandler(this.CellGrid_Click);
-            // 
-            // miResolution
-            // 
-            this.miResolution.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuResolution1,
-            this.miResolution2,
-            this.miResolution4,
-            this.miResolution8,
-            this.miResolution16,
-            this.miResolution32,
-            this.miResolution64,
-            this.miResolution128});
-            this.miResolution.Name = "miResolution";
-            this.miResolution.Size = new System.Drawing.Size(170, 26);
-            this.miResolution.Text = "Resolution";
-            // 
-            // mnuResolution1
-            // 
-            this.mnuResolution1.Name = "mnuResolution1";
-            this.mnuResolution1.Size = new System.Drawing.Size(157, 26);
-            this.mnuResolution1.Tag = "128";
-            this.mnuResolution1.Text = "1×1";
-            this.mnuResolution1.Click += new System.EventHandler(this.Resolution_Click);
-            // 
-            // miResolution2
-            // 
-            this.miResolution2.Name = "miResolution2";
-            this.miResolution2.Size = new System.Drawing.Size(157, 26);
-            this.miResolution2.Tag = "64";
-            this.miResolution2.Text = "2×2";
-            this.miResolution2.Click += new System.EventHandler(this.Resolution_Click);
-            // 
-            // miResolution4
-            // 
-            this.miResolution4.Name = "miResolution4";
-            this.miResolution4.Size = new System.Drawing.Size(157, 26);
-            this.miResolution4.Tag = "32";
-            this.miResolution4.Text = "4×4";
-            this.miResolution4.Click += new System.EventHandler(this.Resolution_Click);
-            // 
-            // miResolution8
-            // 
-            this.miResolution8.Name = "miResolution8";
-            this.miResolution8.Size = new System.Drawing.Size(157, 26);
-            this.miResolution8.Tag = "16";
-            this.miResolution8.Text = "8×8";
-            this.miResolution8.Click += new System.EventHandler(this.Resolution_Click);
-            // 
-            // miResolution16
-            // 
-            this.miResolution16.Name = "miResolution16";
-            this.miResolution16.Size = new System.Drawing.Size(157, 26);
-            this.miResolution16.Tag = "8";
-            this.miResolution16.Text = "16×16";
-            this.miResolution16.Click += new System.EventHandler(this.Resolution_Click);
-            // 
-            // miResolution32
-            // 
-            this.miResolution32.Name = "miResolution32";
-            this.miResolution32.Size = new System.Drawing.Size(157, 26);
-            this.miResolution32.Tag = "4";
-            this.miResolution32.Text = "32×32";
-            this.miResolution32.Click += new System.EventHandler(this.Resolution_Click);
-            // 
-            // miResolution64
-            // 
-            this.miResolution64.Name = "miResolution64";
-            this.miResolution64.Size = new System.Drawing.Size(157, 26);
-            this.miResolution64.Tag = "2";
-            this.miResolution64.Text = "64×64";
-            this.miResolution64.Click += new System.EventHandler(this.Resolution_Click);
-            // 
-            // miResolution128
-            // 
-            this.miResolution128.Checked = true;
-            this.miResolution128.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.miResolution128.Name = "miResolution128";
-            this.miResolution128.Size = new System.Drawing.Size(157, 26);
-            this.miResolution128.Tag = "1";
-            this.miResolution128.Text = "128×128";
-            this.miResolution128.Click += new System.EventHandler(this.Resolution_Click);
-            // 
-            // mnuHelp
-            // 
-            this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miUsage,
-            this.miCredits});
-            this.mnuHelp.Name = "mnuHelp";
-            this.mnuHelp.Size = new System.Drawing.Size(58, 24);
-            this.mnuHelp.Text = "Help";
-            // 
-            // miUsage
-            // 
-            this.miUsage.Name = "miUsage";
-            this.miUsage.Size = new System.Drawing.Size(138, 26);
-            this.miUsage.Text = "Help";
-            this.miUsage.Click += new System.EventHandler(this.Usage_Click);
-            // 
-            // miCredits
-            // 
-            this.miCredits.Name = "miCredits";
-            this.miCredits.Size = new System.Drawing.Size(138, 26);
-            this.miCredits.Text = "About";
-            this.miCredits.Click += new System.EventHandler(this.Credits_Click);
-            // 
-            // pnlColorViewer
-            // 
-            this.pnlColorViewer.Controls.Add(this.lblColorRight);
-            this.pnlColorViewer.Controls.Add(this.lblColorLeft);
-            this.pnlColorViewer.Location = new System.Drawing.Point(0, 148);
-            this.pnlColorViewer.Margin = new System.Windows.Forms.Padding(4);
-            this.pnlColorViewer.Name = "pnlColorViewer";
-            this.pnlColorViewer.Size = new System.Drawing.Size(91, 45);
-            this.pnlColorViewer.TabIndex = 8;
-            // 
-            // lblColorRight
-            // 
-            this.lblColorRight.BackColor = System.Drawing.Color.White;
-            this.lblColorRight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblColorRight.Location = new System.Drawing.Point(46, 0);
-            this.lblColorRight.Name = "lblColorRight";
-            this.lblColorRight.Size = new System.Drawing.Size(46, 45);
-            this.lblColorRight.TabIndex = 1;
-            this.lblColorRight.Text = "0";
-            this.lblColorRight.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblColorLeft
-            // 
-            this.lblColorLeft.BackColor = System.Drawing.Color.White;
-            this.lblColorLeft.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblColorLeft.Location = new System.Drawing.Point(0, 0);
-            this.lblColorLeft.Name = "lblColorLeft";
-            this.lblColorLeft.Size = new System.Drawing.Size(46, 45);
-            this.lblColorLeft.TabIndex = 0;
-            this.lblColorLeft.Text = "0";
-            this.lblColorLeft.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // statusStrip
-            // 
-            this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblPos});
-            this.statusStrip.Location = new System.Drawing.Point(0, 573);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 21, 0);
-            this.statusStrip.Size = new System.Drawing.Size(1200, 26);
-            this.statusStrip.TabIndex = 9;
-            this.statusStrip.Text = "statusStrip1";
-            // 
-            // lblPos
-            // 
-            this.lblPos.Name = "lblPos";
-            this.lblPos.Size = new System.Drawing.Size(45, 20);
-            this.lblPos.Text = "(0, 0)";
-            // 
-            // pnlTools
-            // 
-            this.pnlTools.Controls.Add(this.rbEyedropper);
-            this.pnlTools.Controls.Add(this.rbBucket);
-            this.pnlTools.Controls.Add(this.rbBrush);
-            this.pnlTools.Location = new System.Drawing.Point(0, 269);
-            this.pnlTools.Name = "pnlTools";
-            this.pnlTools.Size = new System.Drawing.Size(225, 107);
-            this.pnlTools.TabIndex = 10;
-            // 
-            // rbEyedropper
-            // 
-            this.rbEyedropper.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbEyedropper.AutoSize = true;
-            this.rbEyedropper.Location = new System.Drawing.Point(0, 52);
-            this.rbEyedropper.Name = "rbEyedropper";
-            this.rbEyedropper.Size = new System.Drawing.Size(97, 26);
-            this.rbEyedropper.TabIndex = 2;
-            this.rbEyedropper.Text = "Eyedropper";
-            this.rbEyedropper.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbEyedropper.UseVisualStyleBackColor = true;
-            // 
-            // rbBucket
-            // 
-            this.rbBucket.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbBucket.Location = new System.Drawing.Point(0, 26);
-            this.rbBucket.Name = "rbBucket";
-            this.rbBucket.Size = new System.Drawing.Size(65, 26);
-            this.rbBucket.TabIndex = 1;
-            this.rbBucket.Text = "Bucket";
-            this.rbBucket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbBucket.UseVisualStyleBackColor = true;
-            // 
-            // rbBrush
-            // 
-            this.rbBrush.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rbBrush.Checked = true;
-            this.rbBrush.Location = new System.Drawing.Point(0, 0);
-            this.rbBrush.Name = "rbBrush";
-            this.rbBrush.Size = new System.Drawing.Size(59, 26);
-            this.rbBrush.TabIndex = 0;
-            this.rbBrush.TabStop = true;
-            this.rbBrush.Text = "Brush";
-            this.rbBrush.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rbBrush.UseVisualStyleBackColor = true;
+            // _lstColorPicker
+            // 
+            this._lstColorPicker.HideSelection = false;
+            this._lstColorPicker.Location = new System.Drawing.Point(0, 45);
+            this._lstColorPicker.Margin = new System.Windows.Forms.Padding(4);
+            this._lstColorPicker.MultiSelect = false;
+            this._lstColorPicker.Name = "_lstColorPicker";
+            this._lstColorPicker.Size = new System.Drawing.Size(170, 80);
+            this._lstColorPicker.TabIndex = 3;
+            this._lstColorPicker.UseCompatibleStateImageBehavior = false;
+            this._lstColorPicker.MouseClick += new System.Windows.Forms.MouseEventHandler(this._lstColorPicker_MouseClick);
+            // 
+            // _pictureBox
+            // 
+            this._pictureBox.BackColor = System.Drawing.Color.White;
+            this._pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this._pictureBox.Location = new System.Drawing.Point(3, 36);
+            this._pictureBox.Margin = new System.Windows.Forms.Padding(4);
+            this._pictureBox.Name = "_pictureBox";
+            this._pictureBox.Size = new System.Drawing.Size(148, 66);
+            this._pictureBox.TabIndex = 5;
+            this._pictureBox.TabStop = false;
+            this._pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this._pictureBox_MouseDown);
+            this._pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this._pictureBox_MouseMove);
+            this._pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this._pictureBox_MouseUp);
+            // 
+            // _menuStrip
+            // 
+            this._menuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this._menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._mnuFile,
+            this._mnuEdit,
+            this._mnuView,
+            this._mnuHelp});
+            this._menuStrip.Location = new System.Drawing.Point(0, 0);
+            this._menuStrip.Name = "_menuStrip";
+            this._menuStrip.Padding = new System.Windows.Forms.Padding(9, 2, 0, 2);
+            this._menuStrip.Size = new System.Drawing.Size(1200, 28);
+            this._menuStrip.TabIndex = 6;
+            this._menuStrip.Text = "menuStrip1";
+            // 
+            // _mnuFile
+            // 
+            this._mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._itmNew,
+            this._itmOpen,
+            this._itmBuild});
+            this._mnuFile.Name = "_mnuFile";
+            this._mnuFile.Size = new System.Drawing.Size(48, 24);
+            this._mnuFile.Text = "File";
+            // 
+            // _itmNew
+            // 
+            this._itmNew.Name = "_itmNew";
+            this._itmNew.Size = new System.Drawing.Size(132, 26);
+            this._itmNew.Text = "New";
+            // 
+            // _itmOpen
+            // 
+            this._itmOpen.Name = "_itmOpen";
+            this._itmOpen.Size = new System.Drawing.Size(132, 26);
+            this._itmOpen.Text = "Open";
+            this._itmOpen.Click += new System.EventHandler(this._itmOpen_Click);
+            // 
+            // _itmBuild
+            // 
+            this._itmBuild.Name = "_itmBuild";
+            this._itmBuild.Size = new System.Drawing.Size(132, 26);
+            this._itmBuild.Text = "Save";
+            this._itmBuild.Click += new System.EventHandler(this._itmSave_Click);
+            // 
+            // _mnuEdit
+            // 
+            this._mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._itmBrush});
+            this._mnuEdit.Name = "_mnuEdit";
+            this._mnuEdit.Size = new System.Drawing.Size(51, 24);
+            this._mnuEdit.Text = "Edit";
+            // 
+            // _itmBrush
+            // 
+            this._itmBrush.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._itmBrushSize});
+            this._itmBrush.Name = "_itmBrush";
+            this._itmBrush.Size = new System.Drawing.Size(132, 26);
+            this._itmBrush.Text = "Brush";
+            // 
+            // _itmBrushSize
+            // 
+            this._itmBrushSize.Name = "_itmBrushSize";
+            this._itmBrushSize.Size = new System.Drawing.Size(121, 26);
+            this._itmBrushSize.Text = "Size";
+            this._itmBrushSize.Click += new System.EventHandler(this._itmBrushSize_Click);
+            // 
+            // _mnuView
+            // 
+            this._mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._itmCellGrid,
+            this._itmResolution});
+            this._mnuView.Name = "_mnuView";
+            this._mnuView.Size = new System.Drawing.Size(58, 24);
+            this._mnuView.Text = "View";
+            // 
+            // _itmCellGrid
+            // 
+            this._itmCellGrid.Name = "_itmCellGrid";
+            this._itmCellGrid.Size = new System.Drawing.Size(170, 26);
+            this._itmCellGrid.Text = "Cell Grid";
+            this._itmCellGrid.Click += new System.EventHandler(this._itmCellGrid_Click);
+            // 
+            // _itmResolution
+            // 
+            this._itmResolution.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._mnuResolution1,
+            this._itmResolution2,
+            this._itmResolution4,
+            this._itmResolution8,
+            this._itmResolution16,
+            this._itmResolution32,
+            this._itmResolution64,
+            this._itmResolution128});
+            this._itmResolution.Name = "_itmResolution";
+            this._itmResolution.Size = new System.Drawing.Size(170, 26);
+            this._itmResolution.Text = "Resolution";
+            // 
+            // _mnuResolution1
+            // 
+            this._mnuResolution1.Name = "_mnuResolution1";
+            this._mnuResolution1.Size = new System.Drawing.Size(157, 26);
+            this._mnuResolution1.Tag = "128";
+            this._mnuResolution1.Text = "1×1";
+            this._mnuResolution1.Click += new System.EventHandler(this._itmResolution_Click);
+            // 
+            // _itmResolution2
+            // 
+            this._itmResolution2.Name = "_itmResolution2";
+            this._itmResolution2.Size = new System.Drawing.Size(157, 26);
+            this._itmResolution2.Tag = "64";
+            this._itmResolution2.Text = "2×2";
+            this._itmResolution2.Click += new System.EventHandler(this._itmResolution_Click);
+            // 
+            // _itmResolution4
+            // 
+            this._itmResolution4.Name = "_itmResolution4";
+            this._itmResolution4.Size = new System.Drawing.Size(157, 26);
+            this._itmResolution4.Tag = "32";
+            this._itmResolution4.Text = "4×4";
+            this._itmResolution4.Click += new System.EventHandler(this._itmResolution_Click);
+            // 
+            // _itmResolution8
+            // 
+            this._itmResolution8.Name = "_itmResolution8";
+            this._itmResolution8.Size = new System.Drawing.Size(157, 26);
+            this._itmResolution8.Tag = "16";
+            this._itmResolution8.Text = "8×8";
+            this._itmResolution8.Click += new System.EventHandler(this._itmResolution_Click);
+            // 
+            // _itmResolution16
+            // 
+            this._itmResolution16.Name = "_itmResolution16";
+            this._itmResolution16.Size = new System.Drawing.Size(157, 26);
+            this._itmResolution16.Tag = "8";
+            this._itmResolution16.Text = "16×16";
+            this._itmResolution16.Click += new System.EventHandler(this._itmResolution_Click);
+            // 
+            // _itmResolution32
+            // 
+            this._itmResolution32.Name = "_itmResolution32";
+            this._itmResolution32.Size = new System.Drawing.Size(157, 26);
+            this._itmResolution32.Tag = "4";
+            this._itmResolution32.Text = "32×32";
+            this._itmResolution32.Click += new System.EventHandler(this._itmResolution_Click);
+            // 
+            // _itmResolution64
+            // 
+            this._itmResolution64.Name = "_itmResolution64";
+            this._itmResolution64.Size = new System.Drawing.Size(157, 26);
+            this._itmResolution64.Tag = "2";
+            this._itmResolution64.Text = "64×64";
+            this._itmResolution64.Click += new System.EventHandler(this._itmResolution_Click);
+            // 
+            // _itmResolution128
+            // 
+            this._itmResolution128.Checked = true;
+            this._itmResolution128.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._itmResolution128.Name = "_itmResolution128";
+            this._itmResolution128.Size = new System.Drawing.Size(157, 26);
+            this._itmResolution128.Tag = "1";
+            this._itmResolution128.Text = "128×128";
+            this._itmResolution128.Click += new System.EventHandler(this._itmResolution_Click);
+            // 
+            // _mnuHelp
+            // 
+            this._mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._itmUsage,
+            this._itmCredits});
+            this._mnuHelp.Name = "_mnuHelp";
+            this._mnuHelp.Size = new System.Drawing.Size(58, 24);
+            this._mnuHelp.Text = "Help";
+            // 
+            // _itmUsage
+            // 
+            this._itmUsage.Name = "_itmUsage";
+            this._itmUsage.Size = new System.Drawing.Size(138, 26);
+            this._itmUsage.Text = "Help";
+            this._itmUsage.Click += new System.EventHandler(this._itmUsage_Click);
+            // 
+            // _itmCredits
+            // 
+            this._itmCredits.Name = "_itmCredits";
+            this._itmCredits.Size = new System.Drawing.Size(138, 26);
+            this._itmCredits.Text = "About";
+            this._itmCredits.Click += new System.EventHandler(this.Credits_Click);
+            // 
+            // _pnlColorViewer
+            // 
+            this._pnlColorViewer.Controls.Add(this._lblColorRight);
+            this._pnlColorViewer.Controls.Add(this._lblColorLeft);
+            this._pnlColorViewer.Location = new System.Drawing.Point(1, 0);
+            this._pnlColorViewer.Margin = new System.Windows.Forms.Padding(4);
+            this._pnlColorViewer.Name = "_pnlColorViewer";
+            this._pnlColorViewer.Size = new System.Drawing.Size(91, 45);
+            this._pnlColorViewer.TabIndex = 8;
+            // 
+            // _lblColorRight
+            // 
+            this._lblColorRight.BackColor = System.Drawing.Color.White;
+            this._lblColorRight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._lblColorRight.Location = new System.Drawing.Point(46, 0);
+            this._lblColorRight.Name = "_lblColorRight";
+            this._lblColorRight.Size = new System.Drawing.Size(46, 45);
+            this._lblColorRight.TabIndex = 1;
+            this._lblColorRight.Text = "0";
+            this._lblColorRight.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // _lblColorLeft
+            // 
+            this._lblColorLeft.BackColor = System.Drawing.Color.White;
+            this._lblColorLeft.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._lblColorLeft.Location = new System.Drawing.Point(0, 0);
+            this._lblColorLeft.Name = "_lblColorLeft";
+            this._lblColorLeft.Size = new System.Drawing.Size(46, 45);
+            this._lblColorLeft.TabIndex = 0;
+            this._lblColorLeft.Text = "0";
+            this._lblColorLeft.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // _statusStrip
+            // 
+            this._statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this._statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._lblPos});
+            this._statusStrip.Location = new System.Drawing.Point(0, 573);
+            this._statusStrip.Name = "_statusStrip";
+            this._statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 21, 0);
+            this._statusStrip.Size = new System.Drawing.Size(1200, 26);
+            this._statusStrip.TabIndex = 9;
+            this._statusStrip.Text = "statusStrip1";
+            // 
+            // _lblPos
+            // 
+            this._lblPos.Name = "_lblPos";
+            this._lblPos.Size = new System.Drawing.Size(45, 20);
+            this._lblPos.Text = "(0, 0)";
+            // 
+            // _pnlTools
+            // 
+            this._pnlTools.Controls.Add(this._rdoBanner);
+            this._pnlTools.Controls.Add(this._rdoEyedropper);
+            this._pnlTools.Controls.Add(this._rdoBucket);
+            this._pnlTools.Controls.Add(this._rdoBrush);
+            this._pnlTools.Location = new System.Drawing.Point(0, 135);
+            this._pnlTools.Name = "_pnlTools";
+            this._pnlTools.Size = new System.Drawing.Size(225, 157);
+            this._pnlTools.TabIndex = 10;
+            // 
+            // _rdoBanner
+            // 
+            this._rdoBanner.Appearance = System.Windows.Forms.Appearance.Button;
+            this._rdoBanner.Enabled = false;
+            this._rdoBanner.Location = new System.Drawing.Point(0, 97);
+            this._rdoBanner.Name = "_rdoBanner";
+            this._rdoBanner.Size = new System.Drawing.Size(65, 26);
+            this._rdoBanner.TabIndex = 3;
+            this._rdoBanner.Text = "Banner";
+            this._rdoBanner.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._rdoBanner.UseVisualStyleBackColor = true;
+            this._rdoBanner.CheckedChanged += new System.EventHandler(this._rdoBanner_CheckedChanged);
+            // 
+            // _rdoEyedropper
+            // 
+            this._rdoEyedropper.Appearance = System.Windows.Forms.Appearance.Button;
+            this._rdoEyedropper.AutoSize = true;
+            this._rdoEyedropper.Location = new System.Drawing.Point(0, 65);
+            this._rdoEyedropper.Name = "_rdoEyedropper";
+            this._rdoEyedropper.Size = new System.Drawing.Size(97, 26);
+            this._rdoEyedropper.TabIndex = 2;
+            this._rdoEyedropper.Text = "Eyedropper";
+            this._rdoEyedropper.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._rdoEyedropper.UseVisualStyleBackColor = true;
+            this._rdoEyedropper.CheckedChanged += new System.EventHandler(this._rdoEyedropper_CheckedChanged);
+            // 
+            // _rdoBucket
+            // 
+            this._rdoBucket.Appearance = System.Windows.Forms.Appearance.Button;
+            this._rdoBucket.Location = new System.Drawing.Point(0, 33);
+            this._rdoBucket.Name = "_rdoBucket";
+            this._rdoBucket.Size = new System.Drawing.Size(65, 26);
+            this._rdoBucket.TabIndex = 1;
+            this._rdoBucket.Text = "Bucket";
+            this._rdoBucket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._rdoBucket.UseVisualStyleBackColor = true;
+            this._rdoBucket.CheckedChanged += new System.EventHandler(this._rdoBucket_CheckedChanged);
+            // 
+            // _rdoBrush
+            // 
+            this._rdoBrush.Appearance = System.Windows.Forms.Appearance.Button;
+            this._rdoBrush.Checked = true;
+            this._rdoBrush.Location = new System.Drawing.Point(0, 1);
+            this._rdoBrush.Name = "_rdoBrush";
+            this._rdoBrush.Size = new System.Drawing.Size(59, 26);
+            this._rdoBrush.TabIndex = 0;
+            this._rdoBrush.TabStop = true;
+            this._rdoBrush.Text = "Brush";
+            this._rdoBrush.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._rdoBrush.UseVisualStyleBackColor = true;
+            this._rdoBrush.CheckedChanged += new System.EventHandler(this._rdoBrush_CheckedChanged);
+            // 
+            // _pnlBanners
+            // 
+            this._pnlBanners.Controls.Add(this._lstBannerColor);
+            this._pnlBanners.Controls.Add(this._txtBannerName);
+            this._pnlBanners.Location = new System.Drawing.Point(810, 269);
+            this._pnlBanners.Name = "_pnlBanners";
+            this._pnlBanners.Size = new System.Drawing.Size(200, 100);
+            this._pnlBanners.TabIndex = 11;
+            // 
+            // _lstBannerColor
+            // 
+            this._lstBannerColor.FormattingEnabled = true;
+            this._lstBannerColor.ItemHeight = 16;
+            this._lstBannerColor.Items.AddRange(new object[] {
+            "white",
+            "orange",
+            "magenta",
+            "light_blue",
+            "yellow",
+            "lime",
+            "pink",
+            "gray",
+            "light_gray",
+            "cyan",
+            "purple",
+            "blue",
+            "brown",
+            "green",
+            "red",
+            "black"});
+            this._lstBannerColor.Location = new System.Drawing.Point(0, 23);
+            this._lstBannerColor.Name = "_lstBannerColor";
+            this._lstBannerColor.Size = new System.Drawing.Size(120, 84);
+            this._lstBannerColor.TabIndex = 1;
+            // 
+            // _txtBannerName
+            // 
+            this._txtBannerName.Location = new System.Drawing.Point(0, 0);
+            this._txtBannerName.Multiline = true;
+            this._txtBannerName.Name = "_txtBannerName";
+            this._txtBannerName.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this._txtBannerName.Size = new System.Drawing.Size(100, 23);
+            this._txtBannerName.TabIndex = 0;
+            // 
+            // _pnlColor
+            // 
+            this._pnlColor.Controls.Add(this._pnlColorViewer);
+            this._pnlColor.Controls.Add(this._lstColorPicker);
+            this._pnlColor.Location = new System.Drawing.Point(1016, 269);
+            this._pnlColor.Name = "_pnlColor";
+            this._pnlColor.Size = new System.Drawing.Size(200, 100);
+            this._pnlColor.TabIndex = 12;
             // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1200, 599);
-            this.Controls.Add(this.pnlTools);
-            this.Controls.Add(this.lvColorPicker);
-            this.Controls.Add(this.statusStrip);
-            this.Controls.Add(this.pnlColorViewer);
-            this.Controls.Add(this.pictureBox);
-            this.Controls.Add(this.menuStrip);
+            this.Controls.Add(this._pnlColor);
+            this.Controls.Add(this._pnlBanners);
+            this.Controls.Add(this._pnlTools);
+            this.Controls.Add(this._statusStrip);
+            this.Controls.Add(this._pictureBox);
+            this.Controls.Add(this._menuStrip);
             this.Font = new System.Drawing.Font("MISTER_CHAN", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.MainMenuStrip = this.menuStrip;
+            this.MainMenuStrip = this._menuStrip;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MapEditor";
             this.Text = "Map Editor";
             this.ResizeEnd += new System.EventHandler(this.MapEditor_ResizeEnd);
+            this.SizeChanged += new System.EventHandler(this.MapEditor_SizeChanged);
             this.Resize += new System.EventHandler(this.MapEditor_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
-            this.menuStrip.ResumeLayout(false);
-            this.menuStrip.PerformLayout();
-            this.pnlColorViewer.ResumeLayout(false);
-            this.statusStrip.ResumeLayout(false);
-            this.statusStrip.PerformLayout();
-            this.pnlTools.ResumeLayout(false);
-            this.pnlTools.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._pictureBox)).EndInit();
+            this._menuStrip.ResumeLayout(false);
+            this._menuStrip.PerformLayout();
+            this._pnlColorViewer.ResumeLayout(false);
+            this._statusStrip.ResumeLayout(false);
+            this._statusStrip.PerformLayout();
+            this._pnlTools.ResumeLayout(false);
+            this._pnlTools.PerformLayout();
+            this._pnlBanners.ResumeLayout(false);
+            this._pnlBanners.PerformLayout();
+            this._pnlColor.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.ListView lvColorPicker;
-        private System.Windows.Forms.PictureBox pictureBox;
-        private System.Windows.Forms.MenuStrip menuStrip;
-        private System.Windows.Forms.ToolStripMenuItem mnuFile;
-        private System.Windows.Forms.ToolStripMenuItem mnuView;
-        private System.Windows.Forms.ToolStripMenuItem miCellGrid;
-        private System.Windows.Forms.ToolStripMenuItem mnuEdit;
-        private System.Windows.Forms.ToolStripMenuItem miBrush;
-        private System.Windows.Forms.ToolStripMenuItem miBrushSize;
-        private System.Windows.Forms.ToolStripMenuItem miBuild;
-        private System.Windows.Forms.ToolStripMenuItem miRedraw;
-        private System.Windows.Forms.ToolStripMenuItem miRedrawMap;
-        private System.Windows.Forms.ToolStripMenuItem miRedrawGrid;
-        private System.Windows.Forms.ToolStripMenuItem miRedrawChunkGrid;
-        private System.Windows.Forms.ToolStripMenuItem miOpen;
-        private System.Windows.Forms.ToolStripMenuItem miResolution;
-        private System.Windows.Forms.Panel pnlColorViewer;
-        private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel lblPos;
-        private System.Windows.Forms.ToolStripMenuItem miNew;
-        private System.Windows.Forms.ToolStripMenuItem mnuResolution1;
-        private System.Windows.Forms.ToolStripMenuItem miResolution2;
-        private System.Windows.Forms.ToolStripMenuItem miResolution4;
-        private System.Windows.Forms.ToolStripMenuItem miResolution8;
-        private System.Windows.Forms.ToolStripMenuItem miResolution16;
-        private System.Windows.Forms.ToolStripMenuItem miResolution32;
-        private System.Windows.Forms.ToolStripMenuItem miResolution64;
-        private System.Windows.Forms.ToolStripMenuItem miResolution128;
-        private System.Windows.Forms.ToolStripMenuItem miRedrawCellGrid;
-        private System.Windows.Forms.Panel pnlTools;
-        private System.Windows.Forms.Label lblColorRight;
-        private System.Windows.Forms.Label lblColorLeft;
-        private System.Windows.Forms.RadioButton rbEyedropper;
-        private System.Windows.Forms.RadioButton rbBucket;
-        private System.Windows.Forms.RadioButton rbBrush;
-        private System.Windows.Forms.ToolStripMenuItem mnuHelp;
-        private System.Windows.Forms.ToolStripMenuItem miCredits;
-        private System.Windows.Forms.ToolStripMenuItem miUsage;
+        private System.Windows.Forms.ListView _lstColorPicker;
+        private System.Windows.Forms.PictureBox _pictureBox;
+        private System.Windows.Forms.MenuStrip _menuStrip;
+        private System.Windows.Forms.ToolStripMenuItem _mnuFile;
+        private System.Windows.Forms.ToolStripMenuItem _mnuView;
+        private System.Windows.Forms.ToolStripMenuItem _itmCellGrid;
+        private System.Windows.Forms.ToolStripMenuItem _mnuEdit;
+        private System.Windows.Forms.ToolStripMenuItem _itmBrush;
+        private System.Windows.Forms.ToolStripMenuItem _itmBrushSize;
+        private System.Windows.Forms.ToolStripMenuItem _itmBuild;
+        private System.Windows.Forms.ToolStripMenuItem _itmOpen;
+        private System.Windows.Forms.ToolStripMenuItem _itmResolution;
+        private System.Windows.Forms.Panel _pnlColorViewer;
+        private System.Windows.Forms.StatusStrip _statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel _lblPos;
+        private System.Windows.Forms.ToolStripMenuItem _itmNew;
+        private System.Windows.Forms.ToolStripMenuItem _mnuResolution1;
+        private System.Windows.Forms.ToolStripMenuItem _itmResolution2;
+        private System.Windows.Forms.ToolStripMenuItem _itmResolution4;
+        private System.Windows.Forms.ToolStripMenuItem _itmResolution8;
+        private System.Windows.Forms.ToolStripMenuItem _itmResolution16;
+        private System.Windows.Forms.ToolStripMenuItem _itmResolution32;
+        private System.Windows.Forms.ToolStripMenuItem _itmResolution64;
+        private System.Windows.Forms.ToolStripMenuItem _itmResolution128;
+        private System.Windows.Forms.Panel _pnlTools;
+        private System.Windows.Forms.Label _lblColorRight;
+        private System.Windows.Forms.Label _lblColorLeft;
+        private System.Windows.Forms.RadioButton _rdoEyedropper;
+        private System.Windows.Forms.RadioButton _rdoBucket;
+        private System.Windows.Forms.RadioButton _rdoBrush;
+        private System.Windows.Forms.ToolStripMenuItem _mnuHelp;
+        private System.Windows.Forms.ToolStripMenuItem _itmCredits;
+        private System.Windows.Forms.ToolStripMenuItem _itmUsage;
+        private System.Windows.Forms.Panel _pnlBanners;
+        private System.Windows.Forms.TextBox _txtBannerName;
+        private System.Windows.Forms.ListBox _lstBannerColor;
+        private System.Windows.Forms.Panel _pnlColor;
+        private System.Windows.Forms.RadioButton _rdoBanner;
     }
 }
 
