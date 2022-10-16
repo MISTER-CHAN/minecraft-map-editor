@@ -111,7 +111,7 @@ namespace MinecraftMapEditor
 
             ResizeForm();
 
-            _bitmap = new Bitmap(_pictureBox.ClientRectangle.Width, _pictureBox.ClientRectangle.Height);
+            _bitmap = new(_pictureBox.ClientRectangle.Width, _pictureBox.ClientRectangle.Height);
             _graphics = Graphics.FromImage(_bitmap);
             _graphics.Clear(Color.White);
             _pictureBox.Image = _bitmap;
@@ -141,16 +141,14 @@ namespace MinecraftMapEditor
         private void _itmOpen_Click(object sender, EventArgs e)
         {
             if (!Open())
-            {
                 MessageBox.Show("Failed.", "Open", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void _itmResolution_Click(object sender, EventArgs e)
         {
             foreach (ToolStripMenuItem itm in _itmResolution.DropDownItems)
                 itm.Checked = false;
-            ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
             _resolution = byte.Parse(menuItem.Tag.ToString());
             menuItem.Checked = true;
         }
@@ -231,8 +229,8 @@ namespace MinecraftMapEditor
             if (ofd.ShowDialog() != DialogResult.OK)
                 return true;
 
-            _file = new NBTFile(ofd.FileName);
-            _tree = new NbtTree();
+            _file = new(ofd.FileName);
+            _tree = new();
             _tree.ReadFrom(_file.GetDataInputStream(CompressionType.GZip));
 
             TagNodeCompound root = _tree.Root;
@@ -261,7 +259,7 @@ namespace MinecraftMapEditor
             else
             {
                 _rdoBanner.Enabled = false;
-                MessageBox.Show("Banners cannot be edited while the scale is 1:1.", "Open", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Banners cannot be edited while the scale is not 1:1.", "Open", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
             TagNodeByte locked = Lookup<TagNodeByte>(data, "locked");
@@ -273,7 +271,7 @@ namespace MinecraftMapEditor
                 _banners = Lookup<TagNodeList>(data, "banners");
                 if (_banners == null)
                 {
-                    _banners = new TagNodeList(TagType.TAG_COMPOUND);
+                    _banners = new(TagType.TAG_COMPOUND);
                     data.Add("banners", _banners);
                     _bannerDict = new();
                 }
@@ -300,7 +298,7 @@ namespace MinecraftMapEditor
             }
             else
             {
-                _banners = new TagNodeList(TagType.TAG_COMPOUND);
+                _banners = new(TagType.TAG_COMPOUND);
                 _bannerDict = new();
             }
 
@@ -423,10 +421,12 @@ namespace MinecraftMapEditor
                     if (_colors[IndexOf(x, y)] == color)
                     {
                         _colors[IndexOf(x, y)] = _selColor;
-                        _graphics.FillRectangle(_brush, new RectangleF(x * _scale, y * _scale, _scale, _scale));
+                        _graphics.FillRectangle(_brush, x * _scale, y * _scale, _scale, _scale);
                     }
                 }
             }
+
+            Redraw();
         }
 
         private void _pictureBox_MouseDownWithEyedropper(object sender, MouseEventArgs e)
@@ -461,7 +461,7 @@ namespace MinecraftMapEditor
                 for (byte bx = left; bx < bottom; ++bx)
                     _colors[IndexOf(bx, by)] = _selColor;
 
-            _graphics.FillRectangle(_brush, new RectangleF(left * _scale, top * _scale, _brushSize * _scale * _resolution, _brushSize * _scale * _resolution));
+            _graphics.FillRectangle(_brush, left * _scale, top * _scale, _brushSize * _scale * _resolution, _brushSize * _scale * _resolution);
 
             RedrawGrids();
         }
@@ -583,8 +583,8 @@ namespace MinecraftMapEditor
             _pen.Color = Color.Red;
             for (int i = 0; i < 0x80; i += _cellSize * _resolution)
             {
-                _graphics.DrawLine(_pen, new PointF(_scale * i, 0), new PointF(_scale * i, _bitmap.Height));
-                _graphics.DrawLine(_pen, new PointF(0, _scale * i), new PointF(_bitmap.Width, _scale * i));
+                _graphics.DrawLine(_pen, _scale * i, 0.0f,_scale * i, _bitmap.Height);
+                _graphics.DrawLine(_pen, 0.0f, _scale * i, _bitmap.Width, _scale * i);
             }
 
             _pictureBox.Invalidate();
@@ -595,8 +595,8 @@ namespace MinecraftMapEditor
             _pen.Color = Color.Black;
             for (byte b = 0; b < 0x10; ++b)
             {
-                _graphics.DrawLine(_pen, new PointF(_scale * 0x10 * b, 0), new PointF(_scale * 0x10 * b, _bitmap.Height));
-                _graphics.DrawLine(_pen, new PointF(0, _scale * 0x10 * b), new PointF(_bitmap.Width, _scale * 0x10 * b));
+                _graphics.DrawLine(_pen, _scale * 0x10 * b, 0.0f,_scale * 0x10 * b, _bitmap.Height);
+                _graphics.DrawLine(_pen, 0.0f, _scale * 0x10 * b, _bitmap.Width, _scale * 0x10 * b);
             }
 
             _pictureBox.Invalidate();
@@ -607,8 +607,8 @@ namespace MinecraftMapEditor
             _pen.Color = Color.Gray;
             for (byte b = 0; b < 0x80 / _resolution; ++b)
             {
-                _graphics.DrawLine(_pen, new PointF(_scale * _resolution * b, 0), new PointF(_scale * _resolution * b, _bitmap.Height));
-                _graphics.DrawLine(_pen, new PointF(0, _scale * _resolution * b), new PointF(_bitmap.Width, _scale * _resolution * b));
+                _graphics.DrawLine(_pen, _scale * _resolution * b, 0.0f, _scale * _resolution * b, _bitmap.Height);
+                _graphics.DrawLine(_pen, 0.0f, _scale * _resolution * b, _bitmap.Width, _scale * _resolution * b);
             }
 
             _pictureBox.Invalidate();
@@ -667,7 +667,7 @@ namespace MinecraftMapEditor
             _bitmap.Dispose();
             _graphics.Flush();
             _graphics.Dispose();
-            _bitmap = new Bitmap(_pictureBox.ClientRectangle.Width, _pictureBox.ClientRectangle.Height);
+            _bitmap = new(_pictureBox.ClientRectangle.Width, _pictureBox.ClientRectangle.Height);
             _graphics = Graphics.FromImage(_bitmap);
             _pictureBox.Image = _bitmap;
             Redraw();
