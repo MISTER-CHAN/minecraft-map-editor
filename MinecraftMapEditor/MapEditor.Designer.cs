@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
             this._lstColorPicker = new System.Windows.Forms.ListView();
             this._pictureBox = new System.Windows.Forms.PictureBox();
             this._menuStrip = new System.Windows.Forms.MenuStrip();
@@ -467,6 +468,7 @@
             this.Controls.Add(this._pictureBox);
             this.Controls.Add(this._menuStrip);
             this.Font = new System.Drawing.Font("MISTER_CHAN", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this._menuStrip;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MapEditor";

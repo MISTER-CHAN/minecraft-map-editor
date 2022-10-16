@@ -140,7 +140,10 @@ namespace MinecraftMapEditor
 
         private void _itmOpen_Click(object sender, EventArgs e)
         {
-            Open();
+            if (!Open())
+            {
+                MessageBox.Show("Failed.", "Open", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void _itmResolution_Click(object sender, EventArgs e)
@@ -168,8 +171,6 @@ namespace MinecraftMapEditor
         }
 
         private int IndexOf(byte x, byte y) => x + y * 0x80;
-
-        private int IndexOf(int x, int z) => x + z * 0x80;
 
         private T Lookup<T>(TagNodeCompound compound, string key) where T : TagNode
         {
@@ -219,40 +220,40 @@ namespace MinecraftMapEditor
 
         }
 
-        private void Open()
+        private bool Open()
         {
-            OpenFileDialog ofd = new OpenFileDialog
+            OpenFileDialog ofd = new()
             {
                 RestoreDirectory = true,
                 Filter = "NBT Files (*.dat)|*.dat",
                 Title = "Open"
             };
             if (ofd.ShowDialog() != DialogResult.OK)
-                return;
+                return true;
 
             _file = new NBTFile(ofd.FileName);
             _tree = new NbtTree();
             _tree.ReadFrom(_file.GetDataInputStream(CompressionType.GZip));
 
             TagNodeCompound root = _tree.Root;
-            if (root == null) return;
+            if (root == null) return false;
 
             TagNodeCompound data = Lookup<TagNodeCompound>(root, "data");
-            if (data == null) return;
+            if (data == null) return false;
 
             TagNodeByteArray colors = Lookup<TagNodeByteArray>(data, "colors");
-            if (colors == null) return;
+            if (colors == null) return false;
 
             TagNodeInt xCenter = Lookup<TagNodeInt>(data, "xCenter");
-            if (xCenter == null) return;
+            if (xCenter == null) return false;
             _xCenter = xCenter.Data;
 
             TagNodeInt zCenter = Lookup<TagNodeInt>(data, "zCenter");
-            if (zCenter == null) return;
+            if (zCenter == null) return false;
             _zCenter = zCenter.Data;
 
             TagNodeByte scale = Lookup<TagNodeByte>(data, "scale");
-            if (scale == null) return;
+            if (scale == null) return false;
             if (scale.Data == 0)
             {
                 _rdoBanner.Enabled = true;
@@ -260,47 +261,57 @@ namespace MinecraftMapEditor
             else
             {
                 _rdoBanner.Enabled = false;
-                MessageBox.Show("Banners cannot be edited while scale is 0.", "Open", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Banners cannot be edited while the scale is 1:1.", "Open", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
             TagNodeByte locked = Lookup<TagNodeByte>(data, "locked");
-            if (locked == null) return;
-            if (locked != 1) locked.Data = 1;
+            if (locked == null) data.Add("locked", new TagNodeByte(1));
+            else if (locked != 1) locked.Data = 1;
 
-            _banners = scale.Data == 0 ? Lookup<TagNodeList>(data, "banners") : null;
-            if (_banners == null)
+            if (scale.Data == 0)
             {
-                _banners = new TagNodeList(TagType.TAG_COMPOUND);
-                data.Add("banners", _banners);
-                _bannerDict = new();
+                _banners = Lookup<TagNodeList>(data, "banners");
+                if (_banners == null)
+                {
+                    _banners = new TagNodeList(TagType.TAG_COMPOUND);
+                    data.Add("banners", _banners);
+                    _bannerDict = new();
+                }
+                else
+                {
+                    _bannerDict = new();
+
+                    foreach (TagNodeCompound banner in _banners.Cast<TagNodeCompound>())
+                    {
+                        TagNodeCompound pos = Lookup<TagNodeCompound>(banner, "Pos");
+                        if (pos == null) continue;
+                        TagNodeInt x = Lookup<TagNodeInt>(pos, "X");
+                        if (x == null) continue;
+                        TagNodeInt z = Lookup<TagNodeInt>(pos, "Z");
+                        if (z == null) continue;
+                        TagNodeString color = Lookup<TagNodeString>(banner, "Color");
+                        if (color == null) continue;
+                        TagNodeString name = Lookup<TagNodeString>(banner, "Name");
+                        if (name == null) continue;
+
+                        _bannerDict.Add(new(x, z), new() { banner = banner, color = color, name = name });
+                    }
+                }
             }
             else
             {
+                _banners = new TagNodeList(TagType.TAG_COMPOUND);
                 _bannerDict = new();
-
-                foreach (TagNodeCompound banner in _banners)
-                {
-                    TagNodeCompound pos = Lookup<TagNodeCompound>(banner, "Pos");
-                    if (pos == null) continue;
-                    TagNodeInt x = Lookup<TagNodeInt>(pos, "X");
-                    if (x == null) continue;
-                    TagNodeInt z = Lookup<TagNodeInt>(pos, "Z");
-                    if (z == null) continue;
-                    TagNodeString color = Lookup<TagNodeString>(banner, "Color");
-                    if (color == null) continue;
-                    TagNodeString name = Lookup<TagNodeString>(banner, "Name");
-                    if (name == null) continue;
-
-                    _bannerDict.Add(new(x, z), new() { banner = banner, color = color, name = name });
-                }
             }
 
             if (colors.Length != 0x4000)
-                return;
+                return false;
 
             _colors = colors.Data;
 
             Redraw();
+
+            return true;
         }
 
         private void _pictureBox_MouseDown(object sender, MouseEventArgs e)
@@ -319,8 +330,7 @@ namespace MinecraftMapEditor
             {
                 case MouseButtons.Left:
                     {
-                        Banner banner;
-                        if (_bannerDict.TryGetValue(p, out banner))
+                        if (_bannerDict.TryGetValue(p, out Banner banner))
                         {
                             _txtBannerName.Text = banner.name.Data;
                             _lstBannerColor.SelectedItem = banner.color.Data;
@@ -354,8 +364,7 @@ namespace MinecraftMapEditor
                     }
                 case MouseButtons.Right:
                     {
-                        Banner banner;
-                        if (_bannerDict.TryGetValue(p, out banner))
+                        if (_bannerDict.TryGetValue(p, out Banner banner))
                         {
                             _bannerDict.Remove(p);
                             _banners.Remove(banner.banner);
