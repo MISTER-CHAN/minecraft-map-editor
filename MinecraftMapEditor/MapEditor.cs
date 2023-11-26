@@ -174,7 +174,7 @@ namespace MinecraftMapEditor
             if (MessageBox.Show($"Author\tMISTER_CHAN\nVersion\t{fileVersion}\nWebsite\thttps://github.com/MISTER-CHAN/minecraft-map-editor\n\nCheck for updates in system browser?", "Credits",
                 MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.OK)
             {
-                System.Diagnostics.Process.Start("https://github.com/MISTER-CHAN/minecraft-map-editor/releases");
+                Process.Start("https://github.com/MISTER-CHAN/minecraft-map-editor/releases");
             }
         }
 
