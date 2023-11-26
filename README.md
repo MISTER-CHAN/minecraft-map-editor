@@ -1,5 +1,5 @@
 # Minecraft Map Editor
-Map Editor for Minecraft JAVA Edition
+Map Editor for Minecraft Java Edition
 ## Usage
 ### How to create a map:
 - Enter your minecraft world, make a filled map.
