@@ -18,6 +18,7 @@ namespace MinecraftMapEditor
         private byte _cellSize = 0, _resolution = 1, _selColor = 0;
         private byte[] _colors = new byte[0x4000];
         private float _scale;
+        private FormWindowState _formWindowState;
         private Graphics _graphics;
         private int _brushSize = 1;
         private int _xCenter, _zCenter;
@@ -27,7 +28,7 @@ namespace MinecraftMapEditor
         private readonly Pen _pen = new(Color.Black);
         private TagNodeList _banners = new(TagType.TAG_COMPOUND);
 
-        private readonly Color[] colorTable = new Color[0x100]
+        private static readonly Color[] colorTable = new Color[0x100]
         {
             Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255), Color.FromArgb(255, 255, 255), // 0
             Color.FromArgb(89, 125, 39), Color.FromArgb(109, 153, 48), Color.FromArgb(127, 178, 56), Color.FromArgb(67, 94, 29), // 1
@@ -121,6 +122,33 @@ namespace MinecraftMapEditor
             _rdoBrush_CheckedChanged(_rdoBrush, null);
         }
 
+        private void FloodFill(int position)
+        {
+            byte color = _colors[position];
+
+            if (color == _selColor) return;
+
+            Queue<int> queue = new();
+            queue.Enqueue(position);
+
+            bool[] visited = new bool[0x80 * 0x80];
+
+            while (queue.Count > 0)
+            {
+                int point = queue.Dequeue();
+                if (visited[point]) continue;
+                visited[point] = true;
+
+                if (_colors[point] != color) continue;
+                _colors[point] = _selColor;
+
+                if (point % 0x80 != 0) queue.Enqueue(point - 1);
+                if (point >= 0x80) queue.Enqueue(point - 0x80);
+                if (point % 0x80 != 0x7F) queue.Enqueue(point + 1);
+                if (point < 0x80 * 0x7F) queue.Enqueue(point + 0x80);
+            }
+        }
+
         private void _itmBrushSize_Click(object sender, EventArgs e)
         {
             string s = Interaction.InputBox("Brush Size", "Map Editor", _brushSize.ToString());
@@ -136,6 +164,11 @@ namespace MinecraftMapEditor
                 _cellSize = byte.Parse(s);
                 RedrawCellGrid();
             }
+        }
+
+        private void _itmCredits_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Author\tMISTER_CHAN\nWebsite\thttps://github.com/MISTER-CHAN/minecraft-map-editor", "Credits");
         }
 
         private void _itmOpen_Click(object sender, EventArgs e)
@@ -163,14 +196,9 @@ namespace MinecraftMapEditor
             MessageBox.Show("See https://github.com/MISTER-CHAN/minecraft-map-editor", "Usage");
         }
 
-        private void Credits_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Author\tMISTER_CHAN\nWebsite\thttps://github.com/MISTER-CHAN/minecraft-map-editor", "Credits");
-        }
+        private static int IndexOf(byte x, byte y) => x + y * 0x80;
 
-        private int IndexOf(byte x, byte y) => x + y * 0x80;
-
-        private T Lookup<T>(TagNodeCompound compound, string key) where T : TagNode
+        private static T Lookup<T>(TagNodeCompound compound, string key) where T : TagNode
         {
             if (compound == null)
                 return default;
@@ -203,19 +231,17 @@ namespace MinecraftMapEditor
         private void MapEditor_Resize(object sender, EventArgs e)
         {
             ResizeForm();
-            if (WindowState == FormWindowState.Maximized)
+            if (WindowState != _formWindowState)
+            {
+                _formWindowState = WindowState;
                 ResizeFormEnd();
+            }
 
         }
 
         private void MapEditor_ResizeEnd(object sender, EventArgs e)
         {
             ResizeFormEnd();
-        }
-
-        private void MapEditor_SizeChanged(object sender, EventArgs e)
-        {
-
         }
 
         private bool Open()
@@ -314,8 +340,7 @@ namespace MinecraftMapEditor
 
         private void _pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (_brush != null)
-                _brush.Dispose();
+            _brush?.Dispose();
         }
 
         private void _pictureBox_MouseDownWithBanner(object sender, MouseEventArgs e)
@@ -367,7 +392,8 @@ namespace MinecraftMapEditor
                             _bannerDict.Remove(p);
                             _banners.Remove(banner.banner);
 
-                            _graphics.FillRectangle(new SolidBrush(colorTable[_colors[IndexOf(ux, uy)]]), _scale * ux, _scale * uy, _scale, _scale);
+                            using (Brush brush = new SolidBrush(colorTable[_colors[IndexOf(ux, uy)]]))
+                                _graphics.FillRectangle(brush, _scale * ux, _scale * uy, _scale, _scale);
                             RedrawGrids();
                         }
                         break;
@@ -391,6 +417,7 @@ namespace MinecraftMapEditor
                     break;
             }
 
+            _brush.Dispose();
             _brush = new SolidBrush(colorTable[_selColor]);
 
             _pictureBox_MouseMoveWithBrush(sender, e);
@@ -410,21 +437,7 @@ namespace MinecraftMapEditor
                     break;
             }
 
-            _brush = new SolidBrush(colorTable[_selColor]);
-
-            byte color = _colors[ToUnscaled(e.X) + ToUnscaled(e.Y)];
-
-            for (byte y = 0; y < 0x80; ++y)
-            {
-                for (byte x = 0; x < 0x80; ++x)
-                {
-                    if (_colors[IndexOf(x, y)] == color)
-                    {
-                        _colors[IndexOf(x, y)] = _selColor;
-                        _graphics.FillRectangle(_brush, x * _scale, y * _scale, _scale, _scale);
-                    }
-                }
-            }
+            FloodFill(IndexOf(ToUnscaled(e.X), ToUnscaled(e.Y)));
 
             Redraw();
         }
@@ -583,7 +596,7 @@ namespace MinecraftMapEditor
             _pen.Color = Color.Red;
             for (int i = 0; i < 0x80; i += _cellSize * _resolution)
             {
-                _graphics.DrawLine(_pen, _scale * i, 0.0f,_scale * i, _bitmap.Height);
+                _graphics.DrawLine(_pen, _scale * i, 0.0f, _scale * i, _bitmap.Height);
                 _graphics.DrawLine(_pen, 0.0f, _scale * i, _bitmap.Width, _scale * i);
             }
 
@@ -595,7 +608,7 @@ namespace MinecraftMapEditor
             _pen.Color = Color.Black;
             for (byte b = 0; b < 0x10; ++b)
             {
-                _graphics.DrawLine(_pen, _scale * 0x10 * b, 0.0f,_scale * 0x10 * b, _bitmap.Height);
+                _graphics.DrawLine(_pen, _scale * 0x10 * b, 0.0f, _scale * 0x10 * b, _bitmap.Height);
                 _graphics.DrawLine(_pen, 0.0f, _scale * 0x10 * b, _bitmap.Width, _scale * 0x10 * b);
             }
 
@@ -626,7 +639,8 @@ namespace MinecraftMapEditor
         {
             for (byte y = 0; y < 0x80; ++y)
                 for (byte x = 0; x < 0x80; ++x)
-                    _graphics.FillRectangle(new SolidBrush(colorTable[_colors[IndexOf(x, y)]]), _scale * x, _scale * y, _scale, _scale);
+                    using (Brush brush = new SolidBrush(colorTable[_colors[IndexOf(x, y)]]))
+                        _graphics.FillRectangle(brush, _scale * x, _scale * y, _scale, _scale);
 
             _pictureBox.Invalidate();
         }

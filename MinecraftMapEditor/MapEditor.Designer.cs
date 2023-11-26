@@ -288,7 +288,7 @@
             this._itmCredits.Name = "_itmCredits";
             this._itmCredits.Size = new System.Drawing.Size(138, 26);
             this._itmCredits.Text = "About";
-            this._itmCredits.Click += new System.EventHandler(this.Credits_Click);
+            this._itmCredits.Click += new System.EventHandler(this._itmCredits_Click);
             // 
             // _pnlColorViewer
             // 
@@ -474,7 +474,6 @@
             this.Name = "MapEditor";
             this.Text = "Map Editor";
             this.ResizeEnd += new System.EventHandler(this.MapEditor_ResizeEnd);
-            this.SizeChanged += new System.EventHandler(this.MapEditor_SizeChanged);
             this.Resize += new System.EventHandler(this.MapEditor_Resize);
             ((System.ComponentModel.ISupportInitialize)(this._pictureBox)).EndInit();
             this._menuStrip.ResumeLayout(false);
