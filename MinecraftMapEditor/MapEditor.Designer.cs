@@ -279,14 +279,14 @@
             // _itmUsage
             // 
             this._itmUsage.Name = "_itmUsage";
-            this._itmUsage.Size = new System.Drawing.Size(138, 26);
+            this._itmUsage.Size = new System.Drawing.Size(224, 26);
             this._itmUsage.Text = "Help";
             this._itmUsage.Click += new System.EventHandler(this._itmUsage_Click);
             // 
             // _itmCredits
             // 
             this._itmCredits.Name = "_itmCredits";
-            this._itmCredits.Size = new System.Drawing.Size(138, 26);
+            this._itmCredits.Size = new System.Drawing.Size(224, 26);
             this._itmCredits.Text = "About";
             this._itmCredits.Click += new System.EventHandler(this._itmCredits_Click);
             // 
