@@ -59,6 +59,7 @@
             this._statusStrip = new System.Windows.Forms.StatusStrip();
             this._lblPos = new System.Windows.Forms.ToolStripStatusLabel();
             this._pnlTools = new System.Windows.Forms.Panel();
+            this._rdoMarquee = new System.Windows.Forms.RadioButton();
             this._rdoBanner = new System.Windows.Forms.RadioButton();
             this._rdoEyedropper = new System.Windows.Forms.RadioButton();
             this._rdoBucket = new System.Windows.Forms.RadioButton();
@@ -130,20 +131,21 @@
             // _itmNew
             // 
             this._itmNew.Name = "_itmNew";
-            this._itmNew.Size = new System.Drawing.Size(132, 26);
+            this._itmNew.Size = new System.Drawing.Size(224, 26);
             this._itmNew.Text = "New";
+            this._itmNew.Click += new System.EventHandler(this._itmNew_Click);
             // 
             // _itmOpen
             // 
             this._itmOpen.Name = "_itmOpen";
-            this._itmOpen.Size = new System.Drawing.Size(132, 26);
+            this._itmOpen.Size = new System.Drawing.Size(224, 26);
             this._itmOpen.Text = "Open";
             this._itmOpen.Click += new System.EventHandler(this._itmOpen_Click);
             // 
             // _itmBuild
             // 
             this._itmBuild.Name = "_itmBuild";
-            this._itmBuild.Size = new System.Drawing.Size(132, 26);
+            this._itmBuild.Size = new System.Drawing.Size(224, 26);
             this._itmBuild.Text = "Save";
             this._itmBuild.Click += new System.EventHandler(this._itmSave_Click);
             // 
@@ -279,14 +281,14 @@
             // _itmUsage
             // 
             this._itmUsage.Name = "_itmUsage";
-            this._itmUsage.Size = new System.Drawing.Size(224, 26);
+            this._itmUsage.Size = new System.Drawing.Size(138, 26);
             this._itmUsage.Text = "Help";
             this._itmUsage.Click += new System.EventHandler(this._itmUsage_Click);
             // 
             // _itmCredits
             // 
             this._itmCredits.Name = "_itmCredits";
-            this._itmCredits.Size = new System.Drawing.Size(224, 26);
+            this._itmCredits.Size = new System.Drawing.Size(138, 26);
             this._itmCredits.Text = "About";
             this._itmCredits.Click += new System.EventHandler(this._itmCredits_Click);
             // 
@@ -342,6 +344,7 @@
             // 
             // _pnlTools
             // 
+            this._pnlTools.Controls.Add(this._rdoMarquee);
             this._pnlTools.Controls.Add(this._rdoBanner);
             this._pnlTools.Controls.Add(this._rdoEyedropper);
             this._pnlTools.Controls.Add(this._rdoBucket);
@@ -351,11 +354,22 @@
             this._pnlTools.Size = new System.Drawing.Size(225, 157);
             this._pnlTools.TabIndex = 10;
             // 
+            // _rdoMarquee
+            // 
+            this._rdoMarquee.Appearance = System.Windows.Forms.Appearance.Button;
+            this._rdoMarquee.Location = new System.Drawing.Point(0, 0);
+            this._rdoMarquee.Name = "_rdoMarquee";
+            this._rdoMarquee.Size = new System.Drawing.Size(59, 26);
+            this._rdoMarquee.TabIndex = 4;
+            this._rdoMarquee.Text = "Select";
+            this._rdoMarquee.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._rdoMarquee.UseVisualStyleBackColor = true;
+            this._rdoMarquee.CheckedChanged += new System.EventHandler(this._rdoSelect_CheckedChanged);
+            // 
             // _rdoBanner
             // 
             this._rdoBanner.Appearance = System.Windows.Forms.Appearance.Button;
-            this._rdoBanner.Enabled = false;
-            this._rdoBanner.Location = new System.Drawing.Point(0, 97);
+            this._rdoBanner.Location = new System.Drawing.Point(0, 128);
             this._rdoBanner.Name = "_rdoBanner";
             this._rdoBanner.Size = new System.Drawing.Size(65, 26);
             this._rdoBanner.TabIndex = 3;
@@ -368,7 +382,7 @@
             // 
             this._rdoEyedropper.Appearance = System.Windows.Forms.Appearance.Button;
             this._rdoEyedropper.AutoSize = true;
-            this._rdoEyedropper.Location = new System.Drawing.Point(0, 65);
+            this._rdoEyedropper.Location = new System.Drawing.Point(0, 96);
             this._rdoEyedropper.Name = "_rdoEyedropper";
             this._rdoEyedropper.Size = new System.Drawing.Size(97, 26);
             this._rdoEyedropper.TabIndex = 2;
@@ -380,7 +394,7 @@
             // _rdoBucket
             // 
             this._rdoBucket.Appearance = System.Windows.Forms.Appearance.Button;
-            this._rdoBucket.Location = new System.Drawing.Point(0, 33);
+            this._rdoBucket.Location = new System.Drawing.Point(0, 64);
             this._rdoBucket.Name = "_rdoBucket";
             this._rdoBucket.Size = new System.Drawing.Size(65, 26);
             this._rdoBucket.TabIndex = 1;
@@ -393,7 +407,7 @@
             // 
             this._rdoBrush.Appearance = System.Windows.Forms.Appearance.Button;
             this._rdoBrush.Checked = true;
-            this._rdoBrush.Location = new System.Drawing.Point(0, 1);
+            this._rdoBrush.Location = new System.Drawing.Point(0, 32);
             this._rdoBrush.Name = "_rdoBrush";
             this._rdoBrush.Size = new System.Drawing.Size(59, 26);
             this._rdoBrush.TabIndex = 0;
@@ -530,6 +544,7 @@
         private System.Windows.Forms.ListBox _lstBannerColor;
         private System.Windows.Forms.Panel _pnlColor;
         private System.Windows.Forms.RadioButton _rdoBanner;
+        private System.Windows.Forms.RadioButton _rdoMarquee;
     }
 }
 
