@@ -336,15 +336,15 @@ public partial class MapEditor : Form
 
             foreach (TagNodeCompound banner in _banners.Cast<TagNodeCompound>())
             {
-                TagNodeCompound pos = Lookup<TagNodeCompound>(banner, "Pos");
+                TagNodeIntArray pos = Lookup<TagNodeIntArray>(banner, "pos");
                 if (pos == null) continue;
-                TagNodeInt x = Lookup<TagNodeInt>(pos, "X");
+                TagNodeInt x = pos[0];
                 if (x == null) continue;
-                TagNodeInt z = Lookup<TagNodeInt>(pos, "Z");
+                TagNodeInt z = pos[2];
                 if (z == null) continue;
-                TagNodeString color = Lookup<TagNodeString>(banner, "Color");
+                TagNodeString color = Lookup<TagNodeString>(banner, "color");
                 if (color == null) continue;
-                TagNodeString name = Lookup<TagNodeString>(banner, "Name");
+                TagNodeString name = Lookup<TagNodeString>(banner, "name");
                 if (name == null) continue;
 
                 _bannerDict.Add(new(x, z), new() { banner = banner, color = color, name = name });
@@ -390,15 +390,10 @@ public partial class MapEditor : Form
 
                         TagNodeCompound node = new()
                             {
-                                { "Color", color },
-                                { "Name", name },
-                                { "Pos",
-                                    new TagNodeCompound()
-                                    {
-                                        { "X", new TagNodeInt(x) },
-                                        { "Y", new TagNodeInt(0) },
-                                        { "Z", new TagNodeInt(z) }
-                                    }
+                                { "color", color },
+                                { "name", name },
+                                { "pos",
+                                    new TagNodeIntArray([x, 0, z])
                                 }
                             };
 
