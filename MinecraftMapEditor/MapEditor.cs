@@ -310,8 +310,7 @@ public partial class MapEditor : Form
         _zCenter = zCenter.Data;
 
         TagNodeByte scale = Lookup<TagNodeByte>(data, "scale");
-        if (scale == null) return false;
-        _mapScale = scale.Data;
+        _mapScale = scale != null ? scale.Data : (byte)0;
 
         TagNodeByte locked = Lookup<TagNodeByte>(data, "locked");
         if (locked == null) data.Add("locked", new TagNodeByte(1));
