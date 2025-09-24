@@ -13,5 +13,5 @@ Map Editor for Minecraft Java Edition
 - Choose `File` > `Save`.
 - Now the edited map has been saved to your world. Enter or re-enter your world to see your edited map.
 ### How to get my edited map:
-- Use command: `/give @p filled_map{map:#}`
+- Use command: `/give @p filled_map[map_id:#]`
 - `#` stands for the map number.
